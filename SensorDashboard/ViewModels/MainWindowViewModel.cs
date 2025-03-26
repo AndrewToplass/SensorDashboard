@@ -1,6 +1,12 @@
-﻿namespace SensorDashboard.ViewModels;
+﻿using System.Collections.ObjectModel;
+using Avalonia;
+using SensorDashboard.Models;
+
+namespace SensorDashboard.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public string Greeting { get; } = "Welcome to Avalonia!";
+    public SensorData? SensorData { get; set; }
+
+    public ObservableCollection<FileViewModel> Files { get; set; } = [];
 }
