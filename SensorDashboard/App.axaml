@@ -3,9 +3,7 @@
              x:Class="SensorDashboard.App"
              xmlns:local="using:SensorDashboard"
              xmlns:sty="using:FluentAvalonia.Styling"
-             xmlns:f="using:Avalonia.Fonts.Inter"
              RequestedThemeVariant="Default">
-    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
         <local:ViewLocator />

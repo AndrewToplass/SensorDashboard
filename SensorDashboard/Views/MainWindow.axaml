@@ -23,11 +23,12 @@
           Margin="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin}">
 
         <!-- Height="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin.Top}" -->
-        <Menu Grid.Row="0">
+        <Menu x:Name="AppMenu" Grid.Row="0">
             <MenuItem Header="File">
-                <MenuItem Header="_Open" Click="MenuOpen_OnClick" />
-                <MenuItem Header="_Save" />
+                <MenuItem Header="_Open" InputGesture="{OnPlatform Ctrl+O, macOS=Cmd+O}" Command="{Binding OpenFile}" />
+                <MenuItem Header="_Save" InputGesture="{OnPlatform Ctrl+S, macOS=Cmd+S}" Command="{Binding SaveFile}" />
                 <Separator />
+                <MenuItem Header="Close Tab" InputGesture="{OnPlatform Ctrl+W, macOS=Cmd+W}" Command="{Binding CloseFile}" />
                 <MenuItem Header="_Quit" />
             </MenuItem>
         </Menu>
@@ -37,6 +38,7 @@
                     IsAddTabButtonVisible="False"
                     TabItems="{Binding OpenTabs}"
                     TabCloseRequested="Tabs_OnTabCloseRequested"
+                    SelectedItem="{Binding SelectedTab}"
                     VerticalAlignment="Stretch"
                     IsVisible="{Binding OpenTabs.Count}">
 

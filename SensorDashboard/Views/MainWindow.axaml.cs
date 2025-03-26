@@ -1,7 +1,12 @@
 using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Linq;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
+using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using SensorDashboard.ViewModels;
 
@@ -9,28 +14,45 @@ namespace SensorDashboard.Views;
 
 public partial class MainWindow : Window
 {
-    private MainWindowViewModel ViewModel => (MainWindowViewModel)DataContext!;
+    private MainWindowViewModel _viewModel = null!;
 
     public MainWindow()
     {
         InitializeComponent();
     }
 
-    /// <summary>
-    /// Click event for the open file button.
-    /// </summary>
-    private void MenuOpen_OnClick(object? sender, RoutedEventArgs e)
+    protected override void OnLoaded(RoutedEventArgs e)
     {
-        ViewModel.OpenTabs.Add(
-            new FileTabViewModel
+        if (DataContext is MainWindowViewModel viewModel)
+        {
+            _viewModel = viewModel;
+        }
+
+        RegisterHotKeys(AppMenu);
+    }
+
+    /// <summary>
+    /// Menu item gestures do not apply globally, need to find all menu items
+    /// with an input gesture and apply a global keybinding.
+    /// </summary>
+    private void RegisterHotKeys(Control control)
+    {
+        if (control is MenuItem menuItem)
+        {
+            if (menuItem.InputGesture is not null && menuItem.Command is not null)
             {
-                Title = $"Sensor Dashboard {ViewModel.OpenTabs.Count + 1}",
-                SensorData = new()
+                KeyBindings.Add(new()
                 {
-                    Data = new double[0, 0]
-                }
-            });
-        Tabs.SelectedItem = ViewModel.OpenTabs[^1];
+                    Gesture = menuItem.InputGesture,
+                    Command = menuItem.Command
+                });
+            }
+        }
+
+        foreach (var child in control.GetLogicalChildren().OfType<Control>())
+        {
+            RegisterHotKeys(child);
+        }
     }
 
     /// <summary>
@@ -43,6 +65,6 @@ public partial class MainWindow : Window
             return;
         }
 
-        ViewModel.OpenTabs.Remove(file);
+        _viewModel.OpenTabs.Remove(file);
     }
 }
