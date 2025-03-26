@@ -4,14 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SensorDashboard.Views"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
         x:Class="SensorDashboard.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="SensorDashboard"
         ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="OSXThickTitleBar, PreferSystemChrome"
         x:Name="MainWindow1">
-    <!-- ExtendClientAreaChromeHints="OSXThickTitleBar, PreferSystemChrome" -->
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
@@ -31,39 +32,32 @@
             </MenuItem>
         </Menu>
 
-        <TabControl x:Name="Tabs"
+        <ui:TabView Grid.Row="1"
+                    x:Name="Tabs"
+                    IsAddTabButtonVisible="False"
+                    TabItems="{Binding OpenTabs}"
+                    TabCloseRequested="Tabs_OnTabCloseRequested"
+                    VerticalAlignment="Stretch"
+                    IsVisible="{Binding OpenTabs.Count}">
+
+            <ui:TabView.TabItemTemplate>
+                <DataTemplate DataType="vm:FileTabViewModel">
+                    <ui:TabViewItem Header="{Binding Title}"
+                                    Content="{Binding}">
+                    </ui:TabViewItem>
+                </DataTemplate>
+            </ui:TabView.TabItemTemplate>
+        </ui:TabView>
+
+        <StackPanel Grid.Row="1"
                     Margin="10"
-                    Grid.Row="1"
-                    ItemsSource="{Binding Files}"
-                    IsVisible="{Binding ElementName=Tabs, Path=ItemCount}">
+                    IsVisible="{Binding !OpenTabs.Count}">
+            <TextBlock FontSize="32"
+                       FontWeight="Light"
+                       Margin="0 0 0 10"
+                       Text="Welcome to Sensor Dashboard" />
+            <TextBlock Text="To get started, click File > Open to load a file." />
+        </StackPanel>
 
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <Grid ColumnDefinitions="Auto,Auto">
-                        <TextBlock Grid.Column="0"
-                                   VerticalAlignment="Center"
-                                   Text="{Binding Title}" />
-                        <Button Grid.Column="1"
-                                Margin="10 0 0 0"
-                                Click="TabClose_OnClick"
-                                VerticalAlignment="Center">
-                            <!-- <PathIcon Data="{StaticResource buil}" /> -->
-                        </Button>
-                    </Grid>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-
-            <TabControl.ContentTemplate>
-                <DataTemplate DataType="vm:FileViewModel">
-                    <local:FileView DataContext="{Binding}"
-                                    Margin="0 10 0 0" />
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-
-        </TabControl>
-
-        <TextBlock Grid.Row="1" Margin="10" IsVisible="{Binding ElementName=Tabs, Path=!ItemCount}">
-            There are no files open.
-        </TextBlock>
     </Grid>
 </Window>

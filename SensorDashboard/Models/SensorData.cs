@@ -4,7 +4,7 @@ namespace SensorDashboard.Models;
 
 public class SensorData : ObservableObject
 {
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     public string[]? Labels { get; set; }
     public required double[,] Data { get; set; }

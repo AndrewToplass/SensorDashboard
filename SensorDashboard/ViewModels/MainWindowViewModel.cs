@@ -6,5 +6,5 @@ namespace SensorDashboard.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public ObservableCollection<FileViewModel> Files { get; set; } = [];
+    public ObservableCollection<FileTabViewModel> OpenTabs { get; set; } = [];
 }

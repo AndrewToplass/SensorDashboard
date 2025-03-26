@@ -4,6 +4,7 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
+using Avalonia.Media;
 using SensorDashboard.ViewModels;
 using SensorDashboard.Views;
 
@@ -14,6 +15,9 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+
+        // Override font chosen by FluentAvalonia.
+        Resources["ContentControlThemeFontFamily"] = FontFamily.Parse("Inter");
     }
 
     public override void OnFrameworkInitializationCompleted()

@@ -1,0 +1,80 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SensorDashboard.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+             x:Class="SensorDashboard.Views.FileTabView"
+             x:DataType="vm:FileTabViewModel"
+             x:CompileBindings="True">
+
+    <Grid ColumnDefinitions="Auto, *, Auto, *"
+          RowDefinitions="Auto, Auto, Auto, *"
+          Margin="10">
+
+        <Grid.Styles>
+            <Style Selector="Grid > TextBox, Grid > NumericUpDown">
+                <!-- Apply same margin value to all direct-child text boxes. -->
+                <Setter Property="Margin" Value="8 4" />
+            </Style>
+
+            <Style Selector="Grid > NumericUpDown">
+                <!-- Use tabular figures for numerical inputs so text width
+                     doesn't change as value changes. -->
+                <Setter Property="FontFeatures">
+                    <FontFeatureCollection>
+                        <FontFeature Tag="tnum" Value="1" />
+                    </FontFeatureCollection>
+                </Setter>
+            </Style>
+
+            <Style Selector="Grid > :is(Control)">
+                <!-- Vertically centre all Grid child controls. -->
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+        </Grid.Styles>
+
+        <Label Grid.Column="0" Grid.Row="0" Content="Total average:" />
+        <NumericUpDown Grid.Column="1"
+                 Grid.Row="0"
+                 IsReadOnly="True"
+                 FormatString="0.00"
+                 ShowButtonSpinner="False"
+                 Focusable="False" />
+
+        <Label Grid.Column="0" Grid.Row="1" Content="Row average:" />
+        <NumericUpDown Grid.Column="1"
+                 Grid.Row="1"
+                 IsReadOnly="True"
+                 FormatString="0.00"
+                 ShowButtonSpinner="False"
+                 Focusable="False" />
+
+        <Label Grid.Column="0" Grid.Row="2" Content="Column average:" />
+        <NumericUpDown Grid.Column="1"
+                 Grid.Row="2"
+                 IsReadOnly="True"
+                 FormatString="0.00"
+                 ShowButtonSpinner="False"
+                 Focusable="False" />
+
+        <Label Grid.Column="2" Grid.Row="0" Content="Threshold minimum:" />
+        <NumericUpDown Grid.Column="3"
+                       Grid.Row="0"
+                       FormatString="0.00"
+                       Increment="0.5"
+                       Value="{Binding ThresholdMinimum}" />
+
+        <Label Grid.Column="2" Grid.Row="1" Content="Threshold maximum:" />
+        <NumericUpDown Grid.Column="3"
+                       Grid.Row="1"
+                       FormatString="0.00"
+                       Increment="0.5"
+                       Value="{Binding ThresholdMaximum}" />
+
+        <DataGrid Grid.Row="3" Grid.Column="2">
+
+        </DataGrid>
+
+    </Grid>
+</UserControl>
