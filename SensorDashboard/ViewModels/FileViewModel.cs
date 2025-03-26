@@ -1,7 +1,13 @@
+using SensorDashboard.Models;
+
 namespace SensorDashboard.ViewModels;
 
-public class FileViewModel(string header, string content)
+public class FileViewModel
 {
-    public string Header { get; } = header;
-    public string Content { get; } = content;
+    public required string Title { get; set; }
+
+    public double ThresholdMinimum { get; set; } = 0;
+    public double ThresholdMaximum { get; set; } = 0;
+
+    public required SensorData SensorData { get; set; }
 }

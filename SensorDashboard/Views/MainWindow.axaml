@@ -3,14 +3,14 @@
         xmlns:vm="using:SensorDashboard.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SensorDashboard.Views"
         mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
         x:Class="SensorDashboard.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="SensorDashboard"
         ExtendClientAreaToDecorationsHint="True"
-        
-        Name="MainWindow1">
+        x:Name="MainWindow1">
     <!-- ExtendClientAreaChromeHints="OSXThickTitleBar, PreferSystemChrome" -->
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -18,10 +18,11 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <DockPanel Margin="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin}">
+    <Grid RowDefinitions="Auto,*"
+          Margin="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin}">
 
         <!-- Height="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin.Top}" -->
-        <Menu DockPanel.Dock="Top">
+        <Menu Grid.Row="0">
             <MenuItem Header="File">
                 <MenuItem Header="_Open" Click="MenuOpen_OnClick" />
                 <MenuItem Header="_Save" />
@@ -30,34 +31,39 @@
             </MenuItem>
         </Menu>
 
-        <TabControl Name="Tabs" ItemsSource="{Binding Files}">
-            
+        <TabControl x:Name="Tabs"
+                    Margin="10"
+                    Grid.Row="1"
+                    ItemsSource="{Binding Files}"
+                    IsVisible="{Binding ElementName=Tabs, Path=ItemCount}">
+
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <Grid ColumnDefinitions="Auto,Auto">
                         <TextBlock Grid.Column="0"
                                    VerticalAlignment="Center"
-                                   Text="{Binding Header}" />
+                                   Text="{Binding Title}" />
                         <Button Grid.Column="1"
                                 Margin="10 0 0 0"
                                 Click="TabClose_OnClick"
                                 VerticalAlignment="Center">
-                            x
+                            <!-- <PathIcon Data="{StaticResource buil}" /> -->
                         </Button>
                     </Grid>
                 </DataTemplate>
             </TabControl.ItemTemplate>
-            
+
             <TabControl.ContentTemplate>
                 <DataTemplate DataType="vm:FileViewModel">
-                    <TextBlock Text="{Binding Content}" />
+                    <local:FileView DataContext="{Binding}"
+                                    Margin="0 10 0 0" />
                 </DataTemplate>
             </TabControl.ContentTemplate>
-            
+
         </TabControl>
-        
-        <TextBlock IsVisible="{Binding ElementName=Tabs, Path=!ItemCount}">
+
+        <TextBlock Grid.Row="1" Margin="10" IsVisible="{Binding ElementName=Tabs, Path=!ItemCount}">
             There are no files open.
         </TextBlock>
-    </DockPanel>
+    </Grid>
 </Window>

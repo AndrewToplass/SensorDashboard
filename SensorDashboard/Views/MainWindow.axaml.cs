@@ -19,7 +19,15 @@ public partial class MainWindow : Window
     /// </summary>
     private void MenuOpen_OnClick(object? sender, RoutedEventArgs e)
     {
-        ViewModel.Files.Add(new("Tab", "Content"));
+        ViewModel.Files.Add(
+            new()
+            {
+                Title = $"Sensor Dashboard {ViewModel.Files.Count + 1}",
+                SensorData = new()
+                {
+                    Data = new double[0, 0]
+                }
+            });
         Tabs.SelectedIndex = ViewModel.Files.Count - 1;
     }
 
