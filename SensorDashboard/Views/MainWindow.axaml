@@ -19,47 +19,51 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="Auto,*"
-          Margin="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin}">
+    <Panel 
+        Margin="{Binding #MainWindow1.OffScreenMargin}">
 
-        <!-- Height="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin.Top}" -->
-        <Menu x:Name="AppMenu" Grid.Row="0">
-            <MenuItem Header="File">
-                <MenuItem Header="_Open" InputGesture="{OnPlatform Ctrl+O, macOS=Cmd+O}" Command="{Binding OpenFile}" />
-                <MenuItem Header="_Save" InputGesture="{OnPlatform Ctrl+S, macOS=Cmd+S}" Command="{Binding SaveFile}" />
-                <Separator />
-                <MenuItem Header="Close Tab" InputGesture="{OnPlatform Ctrl+W, macOS=Cmd+W}" Command="{Binding CloseFile}" />
-                <MenuItem Header="_Quit" />
-            </MenuItem>
-        </Menu>
+        <Grid RowDefinitions="Auto,*">
 
-        <ui:TabView Grid.Row="1"
-                    x:Name="Tabs"
-                    IsAddTabButtonVisible="False"
-                    TabItems="{Binding OpenTabs}"
-                    TabCloseRequested="Tabs_OnTabCloseRequested"
-                    SelectedItem="{Binding SelectedTab}"
-                    VerticalAlignment="Stretch"
-                    IsVisible="{Binding OpenTabs.Count}">
+            <!-- Height="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin.Top}" -->
+            <Menu x:Name="AppMenu" Grid.Row="0" HorizontalAlignment="Left">
+                <MenuItem Header="File">
+                    <MenuItem Header="_Open" InputGesture="{OnPlatform Ctrl+O, macOS=Cmd+O}" Command="{Binding OpenFile}" />
+                    <MenuItem Header="_Save" InputGesture="{OnPlatform Ctrl+S, macOS=Cmd+S}" Command="{Binding SaveFile}" />
+                    <Separator />
+                    <MenuItem Header="Close Tab" InputGesture="{OnPlatform Ctrl+W, macOS=Cmd+W}" Command="{Binding CloseFile}" />
+                    <MenuItem Header="_Quit" />
+                </MenuItem>
+            </Menu>
 
-            <ui:TabView.TabItemTemplate>
-                <DataTemplate DataType="vm:FileTabViewModel">
-                    <ui:TabViewItem Header="{Binding Title}"
-                                    Content="{Binding}">
-                    </ui:TabViewItem>
-                </DataTemplate>
-            </ui:TabView.TabItemTemplate>
-        </ui:TabView>
+            <ui:TabView Grid.Row="1"
+                        x:Name="Tabs"
+                        IsAddTabButtonVisible="False"
+                        TabItems="{Binding OpenTabs}"
+                        TabCloseRequested="Tabs_OnTabCloseRequested"
+                        SelectedItem="{Binding SelectedTab}"
+                        VerticalAlignment="Stretch"
+                        IsVisible="{Binding OpenTabs.Count}">
 
-        <StackPanel Grid.Row="1"
-                    Margin="10"
-                    IsVisible="{Binding !OpenTabs.Count}">
-            <TextBlock FontSize="32"
-                       FontWeight="Light"
-                       Margin="0 0 0 10"
-                       Text="Welcome to Sensor Dashboard" />
-            <TextBlock Text="To get started, click File > Open to load a file." />
-        </StackPanel>
+                <ui:TabView.TabItemTemplate>
+                    <DataTemplate DataType="vm:FileTabViewModel">
+                        <ui:TabViewItem Header="{Binding Title}"
+                                        Content="{Binding}">
+                        </ui:TabViewItem>
+                    </DataTemplate>
+                </ui:TabView.TabItemTemplate>
+            </ui:TabView>
 
-    </Grid>
+            <StackPanel Grid.Row="1"
+                        Margin="10"
+                        IsVisible="{Binding !OpenTabs.Count}">
+                <TextBlock FontSize="32"
+                           FontWeight="Light"
+                           Margin="0 0 0 10"
+                           Text="Welcome to Sensor Dashboard" />
+                <TextBlock Text="To get started, click File > Open to load a file." />
+            </StackPanel>
+
+        </Grid>
+    </Panel>
+
 </Window>

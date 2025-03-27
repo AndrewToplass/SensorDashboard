@@ -39,15 +39,6 @@ public partial class MainWindow : Window
             this.GetObservable(WindowStateProperty)
                 .Subscribe(UpdateWin32Border);
         }
-
-        ContentDialog dialog = new()
-        {
-            Title = "Example title",
-            Content = "Message",
-            CloseButtonText = "OK",
-        };
-
-        await dialog.ShowAsync();
     }
 
     /// <summary>
@@ -106,7 +97,6 @@ public partial class MainWindow : Window
         {
             return;
         }
-
 
         MARGINS margins = new();
         if (state is not WindowState.Maximized or WindowState.FullScreen)

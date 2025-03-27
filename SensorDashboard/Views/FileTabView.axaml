@@ -13,7 +13,7 @@
           Margin="10">
 
         <Grid.Styles>
-            <Style Selector="Grid > TextBox, Grid > NumericUpDown">
+            <Style Selector="Grid > NumericUpDown">
                 <!-- Apply same margin value to all direct-child text boxes. -->
                 <Setter Property="Margin" Value="8 4" />
             </Style>
