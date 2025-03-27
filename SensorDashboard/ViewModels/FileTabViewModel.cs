@@ -1,13 +1,18 @@
 using SensorDashboard.Models;
 
+using CommunityToolkit.Mvvm.ComponentModel;
+
 namespace SensorDashboard.ViewModels;
 
-public class FileTabViewModel : ViewModelBase
+public partial class FileTabViewModel : ViewModelBase
 {
     public string? Title { get; set; }
 
-    public double ThresholdMinimum { get; set; } = 20;
-    public double ThresholdMaximum { get; set; } = 100;
+    [ObservableProperty]
+    private double _thresholdMinimum = 20;
+
+    [ObservableProperty]
+    private double _thresholdMaximum = 100;
 
     public required SensorData SensorData { get; set; }
 }
