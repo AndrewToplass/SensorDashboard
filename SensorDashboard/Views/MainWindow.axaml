@@ -13,29 +13,22 @@
                Title="SensorDashboard"
                TransparencyLevelHint="Mica"
                Background="Transparent"
-        x:Name="MainWindow1">
+               x:Name="MainWindow1">
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
              to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Grid RowDefinitions="Auto,*">
+    <win:AppWindow.KeyBindings>
+        <KeyBinding Gesture="{OnPlatform Ctrl+T, macOS=Cmd+T}" Command="{Binding CreateNewTab}" />
+    </win:AppWindow.KeyBindings>
 
-        <!-- Height="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin.Top}" -->
-        <Menu x:Name="AppMenu" Grid.Row="0" HorizontalAlignment="Left">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Open" InputGesture="{OnPlatform Ctrl+O, macOS=Cmd+O}" Command="{Binding OpenFile}" />
-                <MenuItem Header="_Save" InputGesture="{OnPlatform Ctrl+S, macOS=Cmd+S}" Command="{Binding SaveFile}" />
-                <Separator />
-                <MenuItem Header="Close Tab" InputGesture="{OnPlatform Ctrl+W, macOS=Cmd+W}" Command="{Binding CloseFile}" />
-                <MenuItem Header="_Quit" />
-            </MenuItem>
-        </Menu>
+    <Grid RowDefinitions="Auto,*">
 
         <ui:TabView Grid.Row="1"
                     x:Name="Tabs"
-                    IsAddTabButtonVisible="False"
+                    AddTabButtonCommand="{Binding CreateNewTab}"
                     TabItems="{Binding OpenTabs}"
                     TabCloseRequested="Tabs_OnTabCloseRequested"
                     SelectedItem="{Binding SelectedTab}"
@@ -45,6 +38,7 @@
             <ui:TabView.TabItemTemplate>
                 <DataTemplate DataType="vm:FileTabViewModel">
                     <ui:TabViewItem Header="{Binding Title}"
+                                    IconSource="Document"
                                     Content="{Binding}">
                     </ui:TabViewItem>
                 </DataTemplate>

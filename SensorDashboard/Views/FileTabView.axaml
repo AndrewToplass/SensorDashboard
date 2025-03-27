@@ -10,16 +10,16 @@
              x:CompileBindings="True">
 
     <Grid ColumnDefinitions="Auto, *, Auto, *"
-          RowDefinitions="Auto, Auto, Auto, *"
-          Margin="10">
+          RowDefinitions="Auto, Auto, Auto, Auto, *"
+          Margin="8 0">
 
         <Grid.Styles>
-            <Style Selector="Grid > NumericUpDown">
+            <Style Selector="Grid > NumericUpDown, Grid > ui|NumberBox">
                 <!-- Apply same margin value to all direct-child text boxes. -->
                 <Setter Property="Margin" Value="8 4" />
             </Style>
 
-            <Style Selector="Grid > NumericUpDown">
+            <Style Selector="Grid > NumericUpDown, Grid > ui|NumberBox">
                 <!-- Use tabular figures for numerical inputs so text width
                      doesn't change as value changes. -->
                 <Setter Property="FontFeatures">
@@ -35,16 +35,28 @@
             </Style>
         </Grid.Styles>
 
-        <Label Grid.Column="0" Grid.Row="0" Content="Total average:" />
-        <NumericUpDown Grid.Column="1"
+        <ui:CommandBar Grid.Column="0"
                        Grid.Row="0"
-                       IsReadOnly="True"
-                       FormatString="0.00"
-                       ShowButtonSpinner="False"
-                       IsEnabled="False"
-                       Focusable="False" />
+                       Grid.ColumnSpan="4"
+                       DefaultLabelPosition="Right">
 
-        <Label Grid.Column="0" Grid.Row="1" Content="Row average:" />
+            <ui:CommandBar.PrimaryCommands>
+
+                <ui:CommandBarButton
+                    Label="Open"
+                    IconSource="Folder" />
+
+                <ui:CommandBarButton
+                    Label="Save"
+                    IconSource="Save" />
+
+                <!-- <ui:CommandBarSeparator /> -->
+
+            </ui:CommandBar.PrimaryCommands>
+
+        </ui:CommandBar>
+
+        <Label Grid.Column="0" Grid.Row="1" Content="Total average:" />
         <NumericUpDown Grid.Column="1"
                        Grid.Row="1"
                        IsReadOnly="True"
@@ -53,7 +65,7 @@
                        IsEnabled="False"
                        Focusable="False" />
 
-        <Label Grid.Column="0" Grid.Row="2" Content="Column average:" />
+        <Label Grid.Column="0" Grid.Row="2" Content="Row average:" />
         <NumericUpDown Grid.Column="1"
                        Grid.Row="2"
                        IsReadOnly="True"
@@ -62,27 +74,43 @@
                        IsEnabled="False"
                        Focusable="False" />
 
-        <Label Grid.Column="2" Grid.Row="0" Content="Threshold minimum:" />
-        <NumericUpDown Grid.Column="3"
-                       Grid.Row="0"
+        <Label Grid.Column="0" Grid.Row="3" Content="Column average:" />
+        <NumericUpDown Grid.Column="1"
+                       Grid.Row="3"
+                       IsReadOnly="True"
                        FormatString="0.00"
-                       Increment="0.5"
-                       Value="{Binding ThresholdMinimum}" />
+                       ShowButtonSpinner="False"
+                       IsEnabled="False"
+                       Focusable="False" />
 
-        <Label Grid.Column="2" Grid.Row="1" Content="Threshold maximum:" />
-        <!--<ui:NumberBox Grid.Column="3"
+        <Label Grid.Column="2" Grid.Row="1" Content="Threshold minimum:" />
+        <!-- <NumericUpDown Grid.Column="3" -->
+        <!--                Grid.Row="1" -->
+        <!--                FormatString="0.00" -->
+        <!--                Increment="0.5" -->
+        <!--                Value="{Binding ThresholdMinimum}" /> -->
+
+        <ui:NumberBox Grid.Column="3"
                       Grid.Row="1"
                       AcceptsExpression="True"
                       HorizontalAlignment="Stretch"
-                      Value="{Binding ThresholdMaximum}" />-->
-        <NumericUpDown Grid.Column="3"
-                       Grid.Row="1"
-                       FormatString="0.00"
-                       Increment="0.5"
-                       Value="{Binding ThresholdMaximum}" />
+                      SpinButtonPlacementMode="Inline"
+                      Value="{Binding ThresholdMinimum}" />
 
-        <DataGrid Grid.Row="3" Grid.Column="2">
+        <Label Grid.Column="2" Grid.Row="2" Content="Threshold maximum:" />
+        <ui:NumberBox Grid.Column="3"
+                      Grid.Row="2"
+                      AcceptsExpression="True"
+                      HorizontalAlignment="Stretch"
+                      SpinButtonPlacementMode="Inline"
+                      Value="{Binding ThresholdMaximum}" />
+        <!-- <NumericUpDown Grid.Column="3" -->
+        <!--                Grid.Row="2" -->
+        <!--                FormatString="0.00" -->
+        <!--                Increment="0.5" -->
+        <!--                Value="{Binding ThresholdMaximum}" /> -->
 
+        <DataGrid Grid.Row="4" Grid.Column="2">
 
 
         </DataGrid>
