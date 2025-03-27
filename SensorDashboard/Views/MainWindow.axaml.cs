@@ -12,10 +12,12 @@ using FluentAvalonia.UI.Controls;
 using SensorDashboard.ViewModels;
 using Avalonia;
 using System.Reactive;
+using FluentAvalonia.UI.Windowing;
+using Avalonia.Styling;
 
 namespace SensorDashboard.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : AppWindow
 {
     private MainWindowViewModel _viewModel = null!;
 
@@ -39,7 +41,6 @@ public partial class MainWindow : Window
         //    this.GetObservable(WindowStateProperty)
         //        .Subscribe(UpdateWin32Border);
         //}
-        }
     }
 
     /// <summary>

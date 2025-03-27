@@ -1,17 +1,18 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:SensorDashboard.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SensorDashboard.Views"
-        xmlns:ui="using:FluentAvalonia.UI.Controls"
-        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
-        x:Class="SensorDashboard.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="SensorDashboard"
-        ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="OSXThickTitleBar, PreferSystemChrome"
+<win:AppWindow xmlns="https://github.com/avaloniaui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+               xmlns:vm="using:SensorDashboard.ViewModels"
+               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+               xmlns:local="clr-namespace:SensorDashboard.Views"
+               xmlns:ui="using:FluentAvalonia.UI.Controls"
+               xmlns:win="using:FluentAvalonia.UI.Windowing"
+               mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+               x:Class="SensorDashboard.Views.MainWindow"
+               x:DataType="vm:MainWindowViewModel"
+               Icon="/Assets/avalonia-logo.ico"
+               Title="SensorDashboard"
+               TransparencyLevelHint="Mica"
+               Background="Transparent"
         x:Name="MainWindow1">
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -19,51 +20,48 @@
         <vm:MainWindowViewModel />
     </Design.DataContext>
 
-    <Panel 
-        Margin="{Binding #MainWindow1.OffScreenMargin}">
+    <Grid RowDefinitions="Auto,*">
 
-        <Grid RowDefinitions="Auto,*">
+        <!-- Height="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin.Top}" -->
+        <Menu x:Name="AppMenu" Grid.Row="0" HorizontalAlignment="Left">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open" InputGesture="{OnPlatform Ctrl+O, macOS=Cmd+O}" Command="{Binding OpenFile}" />
+                <MenuItem Header="_Save" InputGesture="{OnPlatform Ctrl+S, macOS=Cmd+S}" Command="{Binding SaveFile}" />
+                <Separator />
+                <MenuItem Header="Close Tab" InputGesture="{OnPlatform Ctrl+W, macOS=Cmd+W}" Command="{Binding CloseFile}" />
+                <MenuItem Header="_Quit" />
+            </MenuItem>
+        </Menu>
 
-            <!-- Height="{Binding ElementName=MainWindow1,Path=WindowDecorationMargin.Top}" -->
-            <Menu x:Name="AppMenu" Grid.Row="0" HorizontalAlignment="Left">
-                <MenuItem Header="File">
-                    <MenuItem Header="_Open" InputGesture="{OnPlatform Ctrl+O, macOS=Cmd+O}" Command="{Binding OpenFile}" />
-                    <MenuItem Header="_Save" InputGesture="{OnPlatform Ctrl+S, macOS=Cmd+S}" Command="{Binding SaveFile}" />
-                    <Separator />
-                    <MenuItem Header="Close Tab" InputGesture="{OnPlatform Ctrl+W, macOS=Cmd+W}" Command="{Binding CloseFile}" />
-                    <MenuItem Header="_Quit" />
-                </MenuItem>
-            </Menu>
+        <ui:TabView Grid.Row="1"
+                    x:Name="Tabs"
+                    IsAddTabButtonVisible="False"
+                    TabItems="{Binding OpenTabs}"
+                    TabCloseRequested="Tabs_OnTabCloseRequested"
+                    SelectedItem="{Binding SelectedTab}"
+                    VerticalAlignment="Stretch"
+                    IsVisible="{Binding OpenTabs.Count}">
 
-            <ui:TabView Grid.Row="1"
-                        x:Name="Tabs"
-                        IsAddTabButtonVisible="False"
-                        TabItems="{Binding OpenTabs}"
-                        TabCloseRequested="Tabs_OnTabCloseRequested"
-                        SelectedItem="{Binding SelectedTab}"
-                        VerticalAlignment="Stretch"
-                        IsVisible="{Binding OpenTabs.Count}">
+            <ui:TabView.TabItemTemplate>
+                <DataTemplate DataType="vm:FileTabViewModel">
+                    <ui:TabViewItem Header="{Binding Title}"
+                                    Content="{Binding}">
+                    </ui:TabViewItem>
+                </DataTemplate>
+            </ui:TabView.TabItemTemplate>
 
-                <ui:TabView.TabItemTemplate>
-                    <DataTemplate DataType="vm:FileTabViewModel">
-                        <ui:TabViewItem Header="{Binding Title}"
-                                        Content="{Binding}">
-                        </ui:TabViewItem>
-                    </DataTemplate>
-                </ui:TabView.TabItemTemplate>
-            </ui:TabView>
+        </ui:TabView>
 
-            <StackPanel Grid.Row="1"
-                        Margin="10"
-                        IsVisible="{Binding !OpenTabs.Count}">
-                <TextBlock FontSize="32"
-                           FontWeight="Light"
-                           Margin="0 0 0 10"
-                           Text="Welcome to Sensor Dashboard" />
-                <TextBlock Text="To get started, click File > Open to load a file." />
-            </StackPanel>
+        <StackPanel Grid.Row="1"
+                    Margin="10"
+                    IsVisible="{Binding !OpenTabs.Count}">
+            <TextBlock FontSize="32"
+                       FontWeight="Light"
+                       Margin="0 0 0 10"
+                       Text="Welcome to Sensor Dashboard" />
+            <TextBlock Text="To get started, click File > Open to load a file." />
+        </StackPanel>
 
-        </Grid>
-    </Panel>
+    </Grid>
 
-</Window>
+</win:AppWindow>

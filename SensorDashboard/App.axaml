@@ -12,4 +12,15 @@
     <Application.Styles>
         <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
     </Application.Styles>
+
+    <!--<Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="{StaticResource LayerOnMicaBaseAltFillColorDefault}" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>-->
 </Application>
