@@ -47,9 +47,10 @@
             <ui:TabView.TabStripFooter>
 
                 <AutoCompleteBox x:Name="TabSearchBar"
-                                 Watermark="Search for dataset..."
-                                 AsyncPopulator="{Binding GetOpenTabsAsync}"
-                                 SelectedItem="{Binding TabSearchTarget}">
+                                 Watermark="Search open datasets…"
+                                 ItemsSource="{Binding OpenTabs}"
+                                 SelectedItem="{Binding TabSearchTarget}"
+                                 FilterMode="ContainsOrdinal">
 
                     <AutoCompleteBox.KeyBindings>
                         <KeyBinding Gesture="Enter"
