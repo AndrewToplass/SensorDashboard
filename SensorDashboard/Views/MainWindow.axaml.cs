@@ -1,19 +1,7 @@
-using System;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.LogicalTree;
-using CommunityToolkit.Mvvm.Input;
 using FluentAvalonia.UI.Controls;
 using SensorDashboard.ViewModels;
-using Avalonia;
-using System.Reactive;
 using FluentAvalonia.UI.Windowing;
-using Avalonia.Styling;
 
 namespace SensorDashboard.Views;
 
@@ -26,7 +14,7 @@ public partial class MainWindow : AppWindow
         InitializeComponent();
     }
 
-    protected override async void OnLoaded(RoutedEventArgs e)
+    protected override void OnLoaded(RoutedEventArgs e)
     {
         if (DataContext is MainWindowViewModel viewModel)
         {
@@ -38,10 +26,19 @@ public partial class MainWindow : AppWindow
 
     private void Tabs_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
     {
-        if (args.Item is FileTabViewModel file)
+        if (args.Item is not FileTabViewModel file)
         {
-            _viewModel.OpenTabs.Remove(file);
+            return;
         }
+
+        file.TryClose()
+            .ContinueWith(async task =>
+            {
+                if (await task)
+                {
+                    _viewModel.OpenTabs.Remove(file);
+                }
+            });
     }
 
     // [StructLayout(LayoutKind.Sequential, Pack = 1)]

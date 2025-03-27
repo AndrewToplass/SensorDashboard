@@ -44,11 +44,13 @@
 
                 <ui:CommandBarButton
                     Label="Open"
-                    IconSource="Folder" />
+                    IconSource="Folder"
+                    Command="{Binding OpenFile}" />
 
                 <ui:CommandBarButton
                     Label="Save"
-                    IconSource="Save" />
+                    IconSource="Save"
+                    Command="{Binding SaveFile}" />
 
                 <!-- <ui:CommandBarSeparator /> -->
 
