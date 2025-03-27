@@ -7,6 +7,9 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Media;
 using SensorDashboard.ViewModels;
 using SensorDashboard.Views;
+using System;
+using Avalonia.Platform;
+using System.Runtime.InteropServices;
 
 namespace SensorDashboard;
 
@@ -17,7 +20,10 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
 
         // Override font chosen by FluentAvalonia.
-        Resources["ContentControlThemeFontFamily"] = FontFamily.Parse("Inter");
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            Resources["ContentControlThemeFontFamily"] = FontFamily.Parse("Inter", new Uri("avares://Avalonia.Fonts.Inter/Assets"));
+        }
     }
 
     public override void OnFrameworkInitializationCompleted()
