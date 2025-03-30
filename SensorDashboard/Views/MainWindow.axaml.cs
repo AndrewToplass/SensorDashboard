@@ -12,16 +12,14 @@ public partial class MainWindow : AppWindow
     public MainWindow()
     {
         InitializeComponent();
-    }
-
-    protected override void OnLoaded(RoutedEventArgs e)
-    {
-        if (DataContext is MainWindowViewModel viewModel)
+        DataContextChanged += delegate
         {
-            _viewModel = viewModel;
-        }
-
-        _viewModel.CreateNewTab();
+            if (DataContext is MainWindowViewModel vm)
+            {
+                _viewModel = vm;
+            }
+            _viewModel.CreateNewTab();
+        };
     }
 
     private void Tabs_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)

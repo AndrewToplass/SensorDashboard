@@ -1,4 +1,8 @@
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Data;
 using SensorDashboard.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentAvalonia.UI.Controls;
@@ -21,7 +25,18 @@ public partial class FileTabViewModel : ViewModelBase
 
     [ObservableProperty] private double _thresholdMaximum = 100;
 
-    public required SensorData SensorData { get; set; }
+    [ObservableProperty] private ObservableCollection<double[]> _dataGridSource = [];
+
+    // Set by required property SensorData.
+    private SensorData _sensorData = null!;
+
+    public required SensorData SensorData
+    {
+        get => _sensorData;
+        set => SetProperty(ref _sensorData, value);
+    }
+
+    public ObservableCollection<DataGridColumn> DataGridColumns { get; set; } = [];
 
     public override string ToString()
     {
@@ -30,6 +45,26 @@ public partial class FileTabViewModel : ViewModelBase
 
     public void OpenFile()
     {
+        SensorData = SensorData.FromTest();
+        Title = SensorData.Title;
+        ObservableCollection<double[]> source = [];
+
+        for (var row = 0; row < SensorData.Data.GetLength(0); row++)
+        {
+            source.Add(SensorData.GetRow(row).ToArray());
+        }
+
+        DataGridColumns.Clear();
+        for (var col = 0; col < SensorData.Data.GetLength(1); col++)
+        {
+            DataGridColumns.Add(new DataGridTextColumn
+            {
+                Header = SensorData.Labels?[col] ?? col.ToString(),
+                Binding = new Binding($"[{col}]"),
+            });
+        }
+
+        DataGridSource = source;
     }
 
     public void SaveFile()

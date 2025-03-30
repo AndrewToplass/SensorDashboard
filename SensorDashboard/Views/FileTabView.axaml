@@ -112,8 +112,18 @@
         <!--                Increment="0.5" -->
         <!--                Value="{Binding ThresholdMaximum}" /> -->
 
-        <DataGrid Grid.Row="4" Grid.Column="2">
-
+        <DataGrid x:Name="DataGridDisplay"
+                  Grid.Row="4"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="4"
+                  Margin="0 8"
+                  ItemsSource="{Binding DataGridSource}"
+                  GridLinesVisibility="All"
+                  VerticalAlignment="Stretch"
+                  HorizontalAlignment="Stretch"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserSortColumns="False">
 
         </DataGrid>
 

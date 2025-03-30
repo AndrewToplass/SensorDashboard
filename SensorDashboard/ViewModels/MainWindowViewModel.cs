@@ -43,6 +43,9 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             Title = title,
             SensorData = new()
+            {
+                Title = title,
+            }
         };
 
         OpenTabs.Add(tab);
