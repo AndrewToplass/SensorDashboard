@@ -1,3 +1,6 @@
+using System.Linq;
+using SensorDashboard.Models;
+
 namespace SensorDashboard;
 
 public class DataProcessor
@@ -7,6 +10,13 @@ public class DataProcessor
     private DataProcessor()
     {
     }
+
+    public double Average(SensorData data) =>
+        Enumerable.Range(0, data.Data.GetLength(0))
+            .SelectMany(data.GetRow)
+            .Average();
+
+    public double AverageOfRow(SensorData data, int row) => data.GetRow(row).Average();
 
     public int BinarySearch(double[] data, double target)
     {

@@ -11,6 +11,23 @@ namespace SensorDashboard.ViewModels;
 
 public partial class FileTabViewModel : ViewModelBase
 {
+    public FileTabViewModel()
+    {
+        PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName is nameof(DataGridSelectedIndex))
+            {
+                if (SensorData is null || DataGridSelectedIndex == -1)
+                {
+                    AverageRow = null;
+                    return;
+                }
+
+                AverageRow = DataProcessor.Instance.AverageOfRow(SensorData, DataGridSelectedIndex);
+            }
+        };
+    }
+
     private bool _hasUnsavedChanges = false;
 
     public bool HasUnsavedChanges
@@ -26,6 +43,12 @@ public partial class FileTabViewModel : ViewModelBase
     [ObservableProperty] private double _thresholdMaximum = 100;
 
     [ObservableProperty] private ObservableCollection<double[]> _dataGridSource = [];
+
+    [ObservableProperty] private int _dataGridSelectedIndex;
+
+    [ObservableProperty] private double _averageTotal;
+
+    [ObservableProperty] private double? _averageRow;
 
     // Set by required property SensorData.
     private SensorData _sensorData = null!;
@@ -65,6 +88,7 @@ public partial class FileTabViewModel : ViewModelBase
         }
 
         DataGridSource = source;
+        AverageTotal = DataProcessor.Instance.Average(SensorData);
     }
 
     public void SaveFile()

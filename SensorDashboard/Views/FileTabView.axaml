@@ -99,7 +99,8 @@
                        FormatString="0.00"
                        ShowButtonSpinner="False"
                        IsEnabled="False"
-                       Focusable="False" />
+                       Focusable="False"
+                       Value="{Binding AverageTotal}" />
 
         <Label Grid.Column="0" Grid.Row="2" Content="Row average:" />
         <NumericUpDown Grid.Column="1"
@@ -108,7 +109,8 @@
                        FormatString="0.00"
                        ShowButtonSpinner="False"
                        IsEnabled="False"
-                       Focusable="False" />
+                       Focusable="False"
+                       Value="{Binding AverageRow, TargetNullValue=0}" />
 
         <Label Grid.Column="0" Grid.Row="3" Content="Column average:" />
         <NumericUpDown Grid.Column="1"
@@ -149,7 +151,8 @@
                   HorizontalAlignment="Stretch"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  CanUserSortColumns="False">
+                  CanUserSortColumns="False"
+                  SelectedIndex="{Binding DataGridSelectedIndex}">
 
         </DataGrid>
 
