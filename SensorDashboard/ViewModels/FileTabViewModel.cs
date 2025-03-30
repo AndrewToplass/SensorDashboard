@@ -15,16 +15,19 @@ public partial class FileTabViewModel : ViewModelBase
     {
         PropertyChanged += (_, args) =>
         {
-            if (args.PropertyName is nameof(DataGridSelectedIndex))
+            if (args.PropertyName is not nameof(DataGridSelectedIndex))
             {
-                if (SensorData is null || DataGridSelectedIndex == -1)
-                {
-                    AverageRow = null;
-                    return;
-                }
-
-                AverageRow = DataProcessor.Instance.AverageOfRow(SensorData, DataGridSelectedIndex);
+                return;
             }
+
+            if (SensorData is null || DataGridSelectedIndex == -1)
+            {
+                AverageRow = null;
+                return;
+            }
+
+            AverageRow = DataProcessor.Instance.AverageOfRow(SensorData,
+                DataGridSelectedIndex);
         };
     }
 
