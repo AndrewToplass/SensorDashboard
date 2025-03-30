@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Data;
+using Avalonia.Platform.Storage;
 using SensorDashboard.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentAvalonia.UI.Controls;
@@ -69,7 +70,7 @@ public partial class FileTabViewModel : ViewModelBase
         return Title;
     }
 
-    public void OpenFile()
+    public void OpenSampleData()
     {
         SensorData = SensorData.FromTest();
         Title = SensorData.Title;
@@ -94,7 +95,11 @@ public partial class FileTabViewModel : ViewModelBase
         AverageTotal = DataProcessor.Instance.Average(SensorData);
     }
 
-    public void SaveFile()
+    public void OpenFile(IStorageFile file)
+    {
+    }
+
+    public void SaveFile(IStorageFile file)
     {
     }
 
@@ -128,7 +133,7 @@ public partial class FileTabViewModel : ViewModelBase
 
         if (result == ContentDialogResult.Primary)
         {
-            SaveFile();
+            // var fileName = DisplaySaveDialog();
         }
 
         // If user clicked a button other than cancel, the tab can be closed.

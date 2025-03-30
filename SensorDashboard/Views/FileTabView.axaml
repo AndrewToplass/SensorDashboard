@@ -10,7 +10,7 @@
              x:Class="SensorDashboard.Views.FileTabView"
              x:DataType="vm:FileTabViewModel"
              x:CompileBindings="True"
-             x:Name="ThisControl">
+             x:Name="ThisFileTabView">
 
     <UserControl.Resources>
         <local:DataGridCellColorMultiConverter x:Key="DataGridCellColorMultiConverter" />
@@ -88,20 +88,26 @@
                 <ui:CommandBarButton
                     Label="Open"
                     IconSource="Folder"
-                    Command="{Binding OpenFile}" />
+                    Click="OpenFileButton_OnClick" />
 
                 <ui:CommandBarButton
                     Label="Save"
                     IconSource="Save"
-                    Command="{Binding SaveFile}" />
+                    Click="SaveFileButton_OnClick" />
 
             </ui:CommandBar.PrimaryCommands>
 
             <ui:CommandBar.SecondaryCommands>
 
                 <ui:CommandBarButton
-                    Label="Show hot keys"
-                    IconSource="Keyboard" />
+                    Label="Open Sample Data"
+                    IconSource="List"
+                    Click="OpenSampleDataButton_OnClick" />
+
+                <ui:CommandBarButton
+                    Label="Show Hot Keys"
+                    IconSource="Keyboard"
+                    Click="ShowHotKeysButton_OnClick" />
 
             </ui:CommandBar.SecondaryCommands>
 
