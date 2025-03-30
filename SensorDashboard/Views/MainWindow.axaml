@@ -12,7 +12,6 @@
                Icon="/Assets/avalonia-logo.ico"
                Title="SensorDashboard"
                TransparencyLevelHint="Mica"
-               Background="Transparent"
                x:Name="MainWindow1">
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -23,6 +22,12 @@
     <win:AppWindow.KeyBindings>
         <KeyBinding Gesture="{OnPlatform Ctrl+T, macOS=Cmd+T}" Command="{Binding CreateNewTab}" />
     </win:AppWindow.KeyBindings>
+
+    <win:AppWindow.Styles>
+        <Style Selector=":is(Window)[ActualTransparencyLevel=Mica][IsActive=true]">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </win:AppWindow.Styles>
 
     <Grid RowDefinitions="Auto,*">
 
