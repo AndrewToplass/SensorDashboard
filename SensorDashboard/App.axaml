@@ -13,14 +13,20 @@
         <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
     </Application.Styles>
 
-    <!--<Application.Resources>
+    <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>
 
-                <ResourceDictionary x:Key="Dark">
-                    <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="{StaticResource LayerOnMicaBaseAltFillColorDefault}" />
+                <ResourceDictionary x:Key="Light">
+                    <BoxShadows x:Key="DataGridShadow">0 0.5 3 #40000000</BoxShadows>
                 </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Dark">
+                    <BoxShadows x:Key="DataGridShadow">0 0.5 3 #80000000</BoxShadows>
+                    <!-- <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="{StaticResource LayerOnMicaBaseAltFillColorDefault}" /> -->
+                </ResourceDictionary>
+
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>
-    </Application.Resources>-->
+    </Application.Resources>
 </Application>

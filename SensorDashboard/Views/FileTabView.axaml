@@ -67,9 +67,6 @@
             <Setter Property="TextAlignment" Value="Center" />
         </Style>
 
-        <Style Selector="Grid.compact">
-            
-        </Style>
     </UserControl.Styles>
 
     <Grid RowDefinitions="Auto, *"
@@ -114,7 +111,8 @@
               RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
               Grid.Column="0"
               Grid.Row="1"
-              VerticalAlignment="Top">
+              VerticalAlignment="Top"
+              Margin="0 8 0 0 ">
 
             <Label Grid.Column="0" Grid.Row="0" Content="Total average:" />
             <NumericUpDown Grid.Column="0"
@@ -154,17 +152,29 @@
 
         </Grid>
 
-        <DataGrid x:Name="DataGridDisplay"
-                  Grid.Row="1"
-                  Grid.Column="1"
-                  ItemsSource="{Binding DataGridSource}"
-                  GridLinesVisibility="All"
-                  VerticalAlignment="Stretch"
-                  HorizontalAlignment="Stretch"
-                  AutoGenerateColumns="False"
-                  IsReadOnly="True"
-                  CanUserSortColumns="False"
-                  SelectedIndex="{Binding DataGridSelectedIndex}" />
+        <Border Grid.Row="1"
+                Grid.Column="1"
+                CornerRadius="8"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                Margin="8 0 0 0"
+                BoxShadow="{DynamicResource DataGridShadow}">
+
+            <Border CornerRadius="{Binding $parent.CornerRadius}"
+                    ClipToBounds="True"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Stretch">
+
+                <DataGrid x:Name="DataGridDisplay"
+                          ItemsSource="{Binding DataGridSource}"
+                          GridLinesVisibility="All"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserSortColumns="False"
+                          SelectedIndex="{Binding DataGridSelectedIndex}" />
+            </Border>
+
+        </Border>
 
     </Grid>
 
