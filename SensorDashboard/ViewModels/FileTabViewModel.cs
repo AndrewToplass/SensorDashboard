@@ -40,8 +40,6 @@ public partial class FileTabViewModel : ViewModelBase
         private set => SetProperty(ref _hasUnsavedChanges, value);
     }
 
-    [ObservableProperty] private string _title = "Tab title";
-
     [ObservableProperty] private double _thresholdMinimum = 0;
 
     [ObservableProperty] private double _thresholdMaximum = 100;
@@ -60,47 +58,57 @@ public partial class FileTabViewModel : ViewModelBase
     public required SensorData SensorData
     {
         get => _sensorData;
-        set => SetProperty(ref _sensorData, value);
+        set
+        {
+            SetProperty(ref _sensorData, value);
+            if (value.Data.Length == 0)
+            {
+                return;
+            }
+
+            ObservableCollection<double[]> source = [];
+            for (var row = 0; row < value.Data.GetLength(0); row++)
+            {
+                source.Add(value.GetRow(row).ToArray());
+            }
+
+            DataGridColumns.Clear();
+            for (var col = 0; col < SensorData.Data.GetLength(1); col++)
+            {
+                DataGridColumns.Add(new DataGridTextColumn
+                {
+                    Header = SensorData.Labels?[col] ?? col.ToString(),
+                    Binding = new Binding($"[{col}]"),
+                });
+            }
+
+            DataGridSource = source;
+            AverageTotal = DataProcessor.Instance.Average(SensorData);
+        }
     }
 
     public ObservableCollection<DataGridColumn> DataGridColumns { get; set; } = [];
 
     public override string ToString()
     {
-        return Title;
+        return SensorData.Title;
     }
 
     public void OpenSampleData()
     {
         SensorData = SensorData.FromTest();
-        Title = SensorData.Title;
-        ObservableCollection<double[]> source = [];
-
-        for (var row = 0; row < SensorData.Data.GetLength(0); row++)
-        {
-            source.Add(SensorData.GetRow(row).ToArray());
-        }
-
-        DataGridColumns.Clear();
-        for (var col = 0; col < SensorData.Data.GetLength(1); col++)
-        {
-            DataGridColumns.Add(new DataGridTextColumn
-            {
-                Header = SensorData.Labels?[col] ?? col.ToString(),
-                Binding = new Binding($"[{col}]"),
-            });
-        }
-
-        DataGridSource = source;
-        AverageTotal = DataProcessor.Instance.Average(SensorData);
     }
 
-    public void OpenFile(IStorageFile file)
+    public async Task OpenFile(IStorageFile file)
     {
+        await using var stream = await file.OpenReadAsync();
+        SensorData = await SensorData.FromFile(stream);
     }
 
-    public void SaveFile(IStorageFile file)
+    public async Task SaveFile(IStorageFile file)
     {
+        await using var stream = await file.OpenWriteAsync();
+        await SensorData.SaveToFile(stream);
     }
 
     /// <summary>
@@ -122,7 +130,7 @@ public partial class FileTabViewModel : ViewModelBase
         ContentDialog dialog = new()
         {
             Title = "Do you want to save changes?",
-            Content = $"There are unsaved changes in “{Title}”",
+            Content = $"There are unsaved changes in “{SensorData.Title}”",
             PrimaryButtonText = "Save",
             SecondaryButtonText = "Don't save",
             CloseButtonText = "Cancel",

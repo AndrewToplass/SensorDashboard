@@ -1,15 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Intrinsics.X86;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
-using FluentAvalonia.UI.Controls;
-using SensorDashboard.Models;
 using SensorDashboard.ViewModels;
 
 namespace SensorDashboard.Views;
@@ -102,7 +98,7 @@ public partial class FileTabView : UserControl
         var file = await topLevel.StorageProvider.SaveFilePickerAsync(new()
         {
             Title = "Save Sensor Dataset",
-            SuggestedFileName = _viewModel.Title,
+            SuggestedFileName = _viewModel.SensorData.Title,
             FileTypeChoices = FileTypes,
             DefaultExtension = ".s4u",
             ShowOverwritePrompt = true
@@ -116,7 +112,7 @@ public partial class FileTabView : UserControl
         var file = await DisplayOpenDialog();
         if (file is not null)
         {
-            _viewModel.OpenFile(file);
+            await _viewModel.OpenFile(file);
         }
     }
 
@@ -125,7 +121,7 @@ public partial class FileTabView : UserControl
         var file = await DisplaySaveDialog();
         if (file is not null)
         {
-            _viewModel.SaveFile(file);
+            await _viewModel.SaveFile(file);
         }
     }
 

@@ -31,7 +31,7 @@ public partial class MainWindowViewModel : ViewModelBase
             // Find next unique number from untitled open tabs.
             title = $"Untitled {index}";
 
-            if (OpenTabs.All(t => t.Title != title))
+            if (OpenTabs.All(t => t.SensorData.Title != title))
             {
                 break;
             }
@@ -41,10 +41,9 @@ public partial class MainWindowViewModel : ViewModelBase
 
         FileTabViewModel tab = new()
         {
-            Title = title,
             SensorData = new()
             {
-                Title = title,
+                Title = title
             }
         };
 

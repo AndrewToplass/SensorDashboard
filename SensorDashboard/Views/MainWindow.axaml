@@ -42,7 +42,7 @@
 
             <ui:TabView.TabItemTemplate>
                 <DataTemplate DataType="vm:FileTabViewModel">
-                    <ui:TabViewItem Header="{Binding Title}"
+                    <ui:TabViewItem Header="{Binding SensorData.Title}"
                                     IconSource="Document"
                                     Content="{Binding}">
                     </ui:TabViewItem>
@@ -78,7 +78,7 @@
 
                     <AutoCompleteBox.ItemTemplate>
                         <DataTemplate x:DataType="vm:FileTabViewModel">
-                            <TextBlock Text="{Binding Title}" />
+                            <TextBlock Text="{Binding SensorData.Title}" />
                         </DataTemplate>
                     </AutoCompleteBox.ItemTemplate>
                 </AutoCompleteBox>
