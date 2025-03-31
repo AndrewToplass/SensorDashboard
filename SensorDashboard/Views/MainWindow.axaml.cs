@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -26,6 +27,7 @@ public partial class MainWindow : AppWindow
             }
 
             _viewModel.CreateNewTab();
+            _viewModel.OpenTabs.CollectionChanged += OpenTabs_CollectionChanged;
         };
     }
 
@@ -41,21 +43,30 @@ public partial class MainWindow : AppWindow
         Stack<FileTabViewModel> openTabs = new(_viewModel.OpenTabs);
         while (openTabs.Count > 0)
         {
-            await RequestCloseTab(openTabs.Pop());
+            if (!await RequestCloseTab(openTabs.Pop()))
+            {
+                break;
+            }
         }
     }
 
-    private async Task RequestCloseTab(FileTabViewModel tab)
+    private async Task<bool> RequestCloseTab(FileTabViewModel tab)
     {
         Tabs.SelectedItem = tab;
 
         var view = this.FindDescendantOfType<FileTabView>();
 
-        if (await (view?.TryClose() ?? Task.FromResult(false)))
+        if (!await (view?.TryClose() ?? Task.FromResult(false)))
         {
-            _viewModel.OpenTabs.Remove(tab);
+            return false;
         }
 
+        _viewModel.OpenTabs.Remove(tab);
+        return true;
+    }
+
+    private void OpenTabs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs args)
+    {
         if (_viewModel.OpenTabs.Count > 0)
         {
             return;
