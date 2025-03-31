@@ -1,4 +1,7 @@
-using Avalonia.Interactivity;
+using System.Threading.Tasks;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
 using SensorDashboard.ViewModels;
 using FluentAvalonia.UI.Windowing;
@@ -18,25 +21,36 @@ public partial class MainWindow : AppWindow
             {
                 _viewModel = vm;
             }
+
             _viewModel.CreateNewTab();
         };
     }
 
-    private void Tabs_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
+    private async void Tabs_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
     {
-        if (args.Item is not FileTabViewModel file)
+        if (args.Item is not FileTabViewModel tab)
         {
             return;
         }
 
-        file.TryClose()
-            .ContinueWith(async task =>
-            {
-                if (await task)
-                {
-                    _viewModel.OpenTabs.Remove(file);
-                }
-            });
+        sender.SelectedItem = tab;
+
+        var view = this.FindDescendantOfType<FileTabView>();
+
+        if (await (view?.TryClose() ?? Task.FromResult(false)))
+        {
+            _viewModel.OpenTabs.Remove(tab);
+        }
+
+        if (_viewModel.OpenTabs.Count > 0)
+        {
+            return;
+        }
+
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+        {
+            desktop.Shutdown();
+        }
     }
 
     // [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -73,5 +87,29 @@ public partial class MainWindow : AppWindow
     //         margins.cxBottomHeight = 1;
     //     }
     //     _ = DwmExtendFrameIntoClientArea(handle.Handle, ref margins);
+    // }
+
+    // private IEnumerable<T> FindAllDescendentsOfType<T>(Visual visual) where T : class
+    // {
+    //     List<T> result = [];
+    //
+    //     Stack<Visual> stack = new([visual]);
+    //     while (stack.Count > 0)
+    //     {
+    //         var child = stack.Pop();
+    //
+    //         if (child is T target)
+    //         {
+    //             result.Add(target);
+    //             continue;
+    //         }
+    //
+    //         foreach (var item in child.GetVisualChildren())
+    //         {
+    //             stack.Push(item);
+    //         }
+    //     }
+    //
+    //     return result;
     // }
 }

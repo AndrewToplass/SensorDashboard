@@ -95,6 +95,11 @@
                     IconSource="Save"
                     Click="SaveFileButton_OnClick" />
 
+                <ui:CommandBarButton
+                    Label="Rename Dataset"
+                    IconSource="Edit"
+                    Click="RenameDatasetButton_OnClick" />
+
             </ui:CommandBar.PrimaryCommands>
 
             <ui:CommandBar.SecondaryCommands>

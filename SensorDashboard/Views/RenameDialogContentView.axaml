@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:SensorDashboard.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:Class="SensorDashboard.Views.RenameDialogContentView"
+             x:DataType="vm:RenameDialogContentViewModel">
+    <StackPanel Orientation="Vertical">
+
+        <StackPanel.Styles>
+            <Style Selector="TextBox">
+                <Setter Property="Margin" Value="8" />
+            </Style>
+            
+            <Style Selector="Label">
+                <Setter Property="Margin" Value="8 8 8 0" />
+            </Style>
+        </StackPanel.Styles>
+
+        <Label Content="Title:" />
+        <TextBox Text="{Binding  Title}" />
+
+        <Label Content="Column labels:" />
+        <ItemsControl ItemsSource="{Binding Names}">
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBox Text="{Binding Value}" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+    </StackPanel>
+</UserControl>

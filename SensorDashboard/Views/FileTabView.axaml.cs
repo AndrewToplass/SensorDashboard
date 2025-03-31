@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
+using FluentAvalonia.UI.Controls;
 using SensorDashboard.ViewModels;
 
 namespace SensorDashboard.Views;
@@ -22,34 +24,63 @@ public partial class FileTabView : UserControl
     protected override void OnDataContextChanged(EventArgs e)
     {
         base.OnDataContextChanged(e);
+
         if (DataContext is not FileTabViewModel vm)
         {
             return;
         }
 
         _viewModel = vm;
+        _viewModel.PropertyChanged += ViewModel_PropertyChanged;
+        _viewModel.PropertyChanging += ViewModel_PropertyChanging;
+        _viewModel.SensorData.PropertyChanged += SensorData_PropertyChanged;
+        ApplyGridColumns();
+    }
 
+    protected override void OnUnloaded(RoutedEventArgs e)
+    {
+        base.OnUnloaded(e);
+        _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
+        _viewModel.PropertyChanging -= ViewModel_PropertyChanging;
+        _viewModel.SensorData.PropertyChanged -= SensorData_PropertyChanged;
+    }
 
-        // Can't use a one-way binding for read-only property.
-        foreach (var old in vm.DataGridColumns.OfType<DataGridBoundColumn>())
+    private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (args.PropertyName is nameof(_viewModel.SensorData))
         {
-            // Make sure existing dynamic columns are added back, need to be
-            // recreated.
-            var column = new DataGridTextColumn
-            {
-                Header = old.Header,
-                Binding = old.Binding,
-                Width = old.Width,
-                IsReadOnly = old.IsReadOnly,
-                IsVisible = old.IsVisible,
-                CanUserSort = old.CanUserSort,
-                CanUserReorder = old.CanUserReorder,
-                CanUserResize = old.CanUserResize
-            };
-            DataGridDisplay.Columns.Add(column);
+            // Attach event listener to SensorData of view model.
+            _viewModel.SensorData.PropertyChanged += SensorData_PropertyChanged;
+            ApplyGridColumns();
         }
+    }
 
-        vm.DataGridColumns = DataGridDisplay.Columns;
+    private void ViewModel_PropertyChanging(object? sender, PropertyChangingEventArgs args)
+    {
+        if (args.PropertyName is nameof(_viewModel.SensorData))
+        {
+            // Detach event listener as SensorData object is no longer part of
+            // the view model.
+            _viewModel.SensorData.PropertyChanged -= SensorData_PropertyChanged;
+        }
+    }
+
+    private void SensorData_PropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        ApplyGridColumns();
+    }
+
+    private void ApplyGridColumns()
+    {
+        DataGridDisplay.Columns.Clear();
+        for (var col = 0; col < _viewModel.SensorData.Columns; col++)
+        {
+            DataGridDisplay.Columns.Add(new DataGridTextColumn
+            {
+                Header = _viewModel.SensorData.Labels?[col] ?? col.ToString(),
+                Binding = new Binding($"[{col}]"),
+            });
+        }
     }
 
     public static readonly IReadOnlyList<FilePickerFileType> FileTypes =
@@ -132,5 +163,70 @@ public partial class FileTabView : UserControl
 
     private async void ShowHotKeysButton_OnClick(object? sender, RoutedEventArgs e)
     {
+    }
+
+    private async void RenameDatasetButton_OnClick(object? sender, RoutedEventArgs e)
+    {
+        RenameDialogContentViewModel rename = new(_viewModel.SensorData);
+        ContentDialog dialog = new()
+        {
+            Title = "Rename Dataset",
+            CloseButtonText = "Cancel",
+            PrimaryButtonText = "Rename",
+            DefaultButton = ContentDialogButton.Primary,
+            Content = rename
+        };
+
+        var result = await dialog.ShowAsync();
+
+        if (result == ContentDialogResult.Primary)
+        {
+            _viewModel.SensorData.Title = rename.Title;
+            _viewModel.SensorData.Labels = rename.Names.Select(c => c.Value).ToArray();
+        }
+    }
+
+    /// <summary>
+    /// Prompt user to save changes if the file has unsaved changes before
+    /// closing tab.
+    /// </summary>
+    /// <returns>
+    /// Returns True if the tab can be closed, after choosing to save or discard
+    /// the file. Returns False if tab cannot be closed, such as choosing the
+    /// cancel option.
+    /// </returns>
+    public async Task<bool> TryClose()
+    {
+        if (!_viewModel.HasUnsavedChanges)
+        {
+            return true;
+        }
+
+        ContentDialog dialog = new()
+        {
+            Title = "Do you want to save changes?",
+            Content = $"There are unsaved changes in “{_viewModel.SensorData.Title}”",
+            PrimaryButtonText = "Save",
+            SecondaryButtonText = "Don‘t save",
+            CloseButtonText = "Cancel",
+            DefaultButton = ContentDialogButton.Primary,
+        };
+
+        var result = await dialog.ShowAsync();
+
+        if (result != ContentDialogResult.Primary)
+        {
+            // Tab can be close if user chose not to save.
+            return result == ContentDialogResult.Secondary;
+        }
+
+        var file = await DisplaySaveDialog();
+        if (file is not null)
+        {
+            await _viewModel.SaveFile(file);
+        }
+
+        // If user clicked Save, the tab can be closed.
+        return true;
     }
 }
