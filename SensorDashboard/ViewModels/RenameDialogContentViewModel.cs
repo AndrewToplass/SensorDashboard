@@ -1,7 +1,9 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SensorDashboard.Models;
+using Tmds.DBus.Protocol;
 
 namespace SensorDashboard.ViewModels;
 
@@ -10,5 +12,6 @@ public partial class RenameDialogContentViewModel(SensorData sensorData) : ViewM
     [ObservableProperty] private string _title = sensorData.Title;
 
     [ObservableProperty] private ObservableCollection<ObservableContainer<string>> _names =
-        new(sensorData.Labels?.Select(i => new ObservableContainer<string>(i)) ?? []);
+        new((sensorData.Labels ?? new string?[sensorData.Columns])
+            .Select(i => new ObservableContainer<string>(i ?? "")));
 }
