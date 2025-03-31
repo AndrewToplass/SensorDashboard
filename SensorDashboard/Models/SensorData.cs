@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.VisualBasic.FileIO;
 
 namespace SensorDashboard.Models;
 
@@ -11,28 +12,80 @@ public partial class SensorData : ObservableObject
 {
     private string _title = null!;
 
+    /// <summary>
+    /// Title of the sensor dataset.
+    /// </summary>
     public required string Title
     {
         get => _title;
         set => SetProperty(ref _title, value);
     }
 
+    /// <summary>
+    /// Labels for each column of the sensor dataset.
+    /// </summary>
     [ObservableProperty] private string[]? _labels;
 
+    /// <summary>
+    /// The sensor dataset 2D array containing sensor values.
+    /// </summary>
     [ObservableProperty] private double[,] _data = new double[0, 0];
 
-    public static SensorData FromTest()
+    public double this[int row, int col]
+    {
+        get => Data[row, col];
+        set => Data[row, col] = value;
+    }
+
+    /// <summary>
+    /// Get the number of rows in the sensor dataset.
+    /// </summary>
+    public int Rows => Data.GetLength(0);
+
+    /// <summary>
+    /// Get the number of columns in the sensor dataset.
+    /// </summary>
+    public int Columns => Data.GetLength(1);
+
+    /// <summary>
+    /// Get an entire row from the sensor dataset.
+    /// </summary>
+    /// <param name="row">The row index to get.</param>
+    /// <returns>An enumerable containing the sensor data from specified row.</returns>
+    public IEnumerable<double> GetRow(int row)
+    {
+        return Enumerable.Range(0, Columns)
+            .Select(i => this[row, i]);
+    }
+
+    /// <summary>
+    /// Get an entire column from the sensor dataset.
+    /// </summary>
+    /// <param name="col">The column index to get.</param>
+    /// <returns>An enumerable containing the sensor data from specified column.</returns>
+    public IEnumerable<double> GetColumn(int col)
+    {
+        return Enumerable.Range(0, Rows)
+            .Select(i => this[i, col]);
+    }
+
+    /// <summary>
+    /// Generate an example testing dataset.
+    /// </summary>
+    /// <param name="rows">The number of rows to include in the dataset.</param>
+    /// <returns>A new instance containing the test data.</returns>
+    public static SensorData FromTest(int rows = 20)
     {
         SensorData sensorData = new()
         {
             Title = "Sensor Data Test",
             Labels = ["First", "Second", "Third", "Fourth", "Fifth"],
-            Data = new double[100, 5]
+            Data = new double[rows, 5]
         };
 
-        for (var i = 0; i < sensorData.Data.GetLength(0); i++)
+        for (var i = 0; i < sensorData.Rows; i++)
         {
-            for (var j = 0; j < sensorData.Data.GetLength(1); j++)
+            for (var j = 0; j < sensorData.Columns; j++)
             {
                 sensorData[i, j] = i + j * 1;
             }
@@ -41,27 +94,34 @@ public partial class SensorData : ObservableObject
         return sensorData;
     }
 
-    public double this[int row, int col]
+    /// <summary>
+    /// Read sensor dataset from stream.
+    /// </summary>
+    /// <param name="stream">The stream to read data from.</param>
+    /// <param name="format">The file format to read the data in.</param>
+    /// <param name="title">Optional title to pass to CSV reading, unused for binary reading.</param>
+    /// <returns>A new instance containing the parsed data.</returns>
+    public static async Task<SensorData> FromStream(Stream stream, FileFormat format = FileFormat.Binary,
+        string? title = null)
     {
-        get => Data[row, col];
-        set => Data[row, col] = value;
+        if (format == FileFormat.Csv)
+        {
+            return await ReadCsvData(stream, title);
+        }
+
+        return await ReadBinaryData(stream);
     }
 
-    public IEnumerable<double> GetRow(int row)
-    {
-        return Enumerable.Range(0, Data.GetLength(1))
-            .Select(i => Data[row, i]);
-    }
 
-    public IEnumerable<double> GetColumn(int col)
+    /// <summary>
+    /// Read binary data from stream and get sensor dataset.
+    /// </summary>
+    /// <param name="stream">The stream to read data from.</param>
+    /// <returns>A new instance containing the parsed data.</returns>
+    /// <exception cref="IOException">If binary file is invalid or other IO error occured.</exception>
+    public static Task<SensorData> ReadBinaryData(Stream stream)
     {
-        return Enumerable.Range(0, Data.GetLength(0))
-            .Select(i => Data[i, col]);
-    }
-
-    public static async Task<SensorData> FromFile(Stream stream)
-    {
-        using BinaryReader reader = new(stream, Encoding.UTF8);
+        BinaryReader reader = new(stream, Encoding.UTF8);
 
         if (reader.ReadChar() != 'S' ||
             reader.ReadChar() != '4' ||
@@ -99,21 +159,104 @@ public partial class SensorData : ObservableObject
             }
         }
 
-        return new SensorData
+        return Task.FromResult(new SensorData
         {
             Title = title,
             Labels = labels,
             Data = data
-        };
+        });
     }
 
-    public static async Task<SensorData> FromFile(string fileName)
+    /// <summary>
+    /// Read CSV data from stream and get sensor dataset.
+    /// </summary>
+    /// <param name="stream">The stream to read data from.</param>
+    /// <param name="title">Title for the dataset to use.</param>
+    /// <returns>A new instance containing the parsed data.</returns>
+    public static Task<SensorData> ReadCsvData(Stream stream, string? title = null)
     {
-        await using FileStream fs = new(fileName, FileMode.Open, FileAccess.Read);
-        return await FromFile(fs);
+        using StreamReader reader = new(stream);
+        using TextFieldParser parser = new(reader);
+        parser.TextFieldType = FieldType.Delimited;
+        parser.Delimiters = [","];
+        parser.HasFieldsEnclosedInQuotes = true;
+        parser.TrimWhiteSpace = true;
+
+        var sensorData = new SensorData
+        {
+            Title = title ?? "Untitled Dataset"
+        };
+
+        var header = parser.ReadFields();
+        if (header is not null)
+        {
+            sensorData.Labels = header;
+        }
+
+        var columnCount = sensorData.Labels?.Length ?? -1;
+        List<double[]> data = [];
+
+        while (!parser.EndOfData)
+        {
+            var line = parser.ReadFields();
+            if (line is null)
+            {
+                continue;
+            }
+
+            if (columnCount != -1)
+            {
+                columnCount = line.Length;
+            }
+
+            var row = new double[columnCount];
+            for (var i = 0; i < columnCount; i++)
+            {
+                var column = i >= columnCount ? null : line[i];
+                if (double.TryParse(column, out var value))
+                {
+                    row[i] = value;
+                }
+            }
+
+            data.Add(row);
+        }
+
+        sensorData.Data = new double[data.Count, columnCount];
+        for (var i = 0; i < data.Count; i++)
+        {
+            for (var j = 0; j < columnCount; j++)
+            {
+                sensorData[i, j] = data[i][j];
+            }
+        }
+
+        return Task.FromResult(sensorData);
     }
 
-    public async Task SaveToFile(Stream stream)
+    /// <summary>
+    /// Save data from current instance to the specified stream, either in
+    /// Binary or CSV format.
+    /// </summary>
+    /// <param name="stream">The stream to write data to.</param>
+    /// <param name="format">The file format to write the data in.</param>
+    public async Task SaveToStream(Stream stream, FileFormat format = FileFormat.Binary)
+    {
+        if (format == FileFormat.Csv)
+        {
+            await WriteCsvData(stream);
+        }
+        else
+        {
+            await WriteBinaryData(stream);
+        }
+    }
+
+    /// <summary>
+    /// Write sensor dataset to stream in binary format.
+    /// </summary>
+    /// <param name="stream">The stream to write data to.</param>
+    public async Task WriteBinaryData(Stream stream)
     {
         await using BinaryWriter writer = new(stream, Encoding.UTF8);
 
@@ -121,8 +264,8 @@ public partial class SensorData : ObservableObject
         writer.Write(['S', '4', 'U', 'D']);
 
         // Length of data in the file.
-        writer.Write(Data.GetLength(0));
-        writer.Write(Data.GetLength(1));
+        writer.Write(Rows);
+        writer.Write(Columns);
 
         // Title of the dataset.
         writer.Write(Title);
@@ -142,18 +285,42 @@ public partial class SensorData : ObservableObject
         }
 
         // Sensor data from the 2D array.
-        for (var i = 0; i < Data.GetLength(0); i++)
+        for (var i = 0; i < Rows; i++)
         {
-            for (var j = 0; j < Data.GetLength(1); j++)
+            for (var j = 0; j < Columns; j++)
             {
                 writer.Write(Data[i, j]);
             }
         }
     }
 
-    public async Task SaveToFile(string fileName)
+    /// <summary>
+    /// Write sensor dataset to stream in CSV format.
+    /// </summary>
+    /// <param name="stream">The stream to write data to.</param>
+    public async Task WriteCsvData(Stream stream)
     {
-        await using FileStream fs = new(fileName, FileMode.Create, FileAccess.Write);
-        await SaveToFile(fs);
+        await using StreamWriter writer = new(stream, Encoding.UTF8);
+
+        // Write labels as header row.
+        var headers = Enumerable.Range(0, Columns)
+            .Select(i => '"' + (Labels?[i] ?? $"Column {i}").Replace("\"", "\"\"") + '"');
+
+        await writer.WriteLineAsync(string.Join(", ", headers));
+
+        for (var i = 0; i < Rows; i++)
+        {
+            // Write each row of data into single line.
+            var row = GetRow(i);
+            await writer.WriteLineAsync(string.Join(", ", row));
+        }
+
+        await writer.WriteLineAsync();
     }
+}
+
+public enum FileFormat
+{
+    Binary,
+    Csv
 }

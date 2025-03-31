@@ -52,7 +52,7 @@ public partial class FileTabView : UserControl
         vm.DataGridColumns = DataGridDisplay.Columns;
     }
 
-    public IReadOnlyList<FilePickerFileType> FileTypes =
+    public static readonly IReadOnlyList<FilePickerFileType> FileTypes =
     [
         new("Sensing4U Dataset")
         {
@@ -62,7 +62,7 @@ public partial class FileTabView : UserControl
         {
             Patterns = ["*.csv"],
             MimeTypes = ["text/csv"]
-        }
+        },
     ];
 
     public async Task<IStorageFile?> DisplayOpenDialog()

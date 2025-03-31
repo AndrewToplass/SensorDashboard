@@ -12,7 +12,7 @@ public class DataProcessor
     }
 
     public double Average(SensorData data) =>
-        Enumerable.Range(0, data.Data.GetLength(0))
+        Enumerable.Range(0, data.Rows)
             .SelectMany(data.GetRow)
             .Average();
 

@@ -67,13 +67,13 @@ public partial class FileTabViewModel : ViewModelBase
             }
 
             ObservableCollection<double[]> source = [];
-            for (var row = 0; row < value.Data.GetLength(0); row++)
+            for (var row = 0; row < value.Rows; row++)
             {
                 source.Add(value.GetRow(row).ToArray());
             }
 
             DataGridColumns.Clear();
-            for (var col = 0; col < SensorData.Data.GetLength(1); col++)
+            for (var col = 0; col < SensorData.Columns; col++)
             {
                 DataGridColumns.Add(new DataGridTextColumn
                 {
@@ -102,13 +102,15 @@ public partial class FileTabViewModel : ViewModelBase
     public async Task OpenFile(IStorageFile file)
     {
         await using var stream = await file.OpenReadAsync();
-        SensorData = await SensorData.FromFile(stream);
+        var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
+        SensorData = await SensorData.FromStream(stream, format, file.Name);
     }
 
     public async Task SaveFile(IStorageFile file)
     {
+        var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
         await using var stream = await file.OpenWriteAsync();
-        await SensorData.SaveToFile(stream);
+        await SensorData.SaveToStream(stream, format);
     }
 
     /// <summary>
