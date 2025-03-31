@@ -37,15 +37,20 @@
                     TabItems="{Binding OpenTabs}"
                     TabCloseRequested="Tabs_OnTabCloseRequested"
                     SelectedItem="{Binding SelectedTab}"
-                    VerticalAlignment="Stretch"
-                    IsVisible="{Binding OpenTabs.Count}">
+                    VerticalAlignment="Stretch">
+
+            <ui:TabView.Styles>
+                <Style Selector="ui|TabViewItem Button">
+                    <Setter Property="FontStyle" Value="Normal" />
+                </Style>
+            </ui:TabView.Styles>
 
             <ui:TabView.TabItemTemplate>
                 <DataTemplate DataType="vm:FileTabViewModel">
                     <ui:TabViewItem Header="{Binding SensorData.Title}"
                                     IconSource="Document"
-                                    Content="{Binding}">
-                    </ui:TabViewItem>
+                                    FontStyle="{Binding FontStyle}"
+                                    Content="{Binding}" />
                 </DataTemplate>
             </ui:TabView.TabItemTemplate>
 
@@ -86,16 +91,6 @@
             </ui:TabView.TabStripFooter>
 
         </ui:TabView>
-
-        <StackPanel Grid.Row="1"
-                    Margin="10"
-                    IsVisible="{Binding !OpenTabs.Count}">
-            <TextBlock FontSize="32"
-                       FontWeight="Light"
-                       Margin="0 0 0 10"
-                       Text="Welcome to Sensor Dashboard" />
-            <TextBlock Text="To get started, click File > Open to load a file." />
-        </StackPanel>
 
     </Grid>
 

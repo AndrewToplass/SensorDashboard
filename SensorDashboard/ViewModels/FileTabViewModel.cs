@@ -2,13 +2,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Data;
+using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using SensorDashboard.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
-using FluentAvalonia.UI.Controls;
 
 namespace SensorDashboard.ViewModels;
 
@@ -64,8 +61,16 @@ public partial class FileTabViewModel : ViewModelBase
     public bool HasUnsavedChanges
     {
         get => _hasUnsavedChanges;
-        private set => SetProperty(ref _hasUnsavedChanges, value);
+        private set
+        {
+            SetProperty(ref _hasUnsavedChanges, value);
+            FontStyle = value
+                ? FontStyle.Italic
+                : FontStyle.Normal;
+        }
     }
+
+    [ObservableProperty] private FontStyle _fontStyle = FontStyle.Normal;
 
     [ObservableProperty] private double _thresholdMinimum = 0;
 
