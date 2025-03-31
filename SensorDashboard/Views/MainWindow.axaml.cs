@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
@@ -15,6 +17,7 @@ public partial class MainWindow : AppWindow
     public MainWindow()
     {
         InitializeComponent();
+        Closing += This_OnClosing;
         DataContextChanged += delegate
         {
             if (DataContext is MainWindowViewModel vm)
@@ -26,14 +29,25 @@ public partial class MainWindow : AppWindow
         };
     }
 
-    private async void Tabs_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
+    private async void This_OnClosing(object? sender, WindowClosingEventArgs args)
     {
-        if (args.Item is not FileTabViewModel tab)
+        if (_viewModel.OpenTabs.Count == 0)
         {
             return;
         }
 
-        sender.SelectedItem = tab;
+        args.Cancel = true;
+
+        Stack<FileTabViewModel> openTabs = new(_viewModel.OpenTabs);
+        while (openTabs.Count > 0)
+        {
+            await RequestCloseTab(openTabs.Pop());
+        }
+    }
+
+    private async Task RequestCloseTab(FileTabViewModel tab)
+    {
+        Tabs.SelectedItem = tab;
 
         var view = this.FindDescendantOfType<FileTabView>();
 
@@ -50,6 +64,14 @@ public partial class MainWindow : AppWindow
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Shutdown();
+        }
+    }
+
+    private async void Tabs_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
+    {
+        if (args.Item is FileTabViewModel tab)
+        {
+            await RequestCloseTab(tab);
         }
     }
 

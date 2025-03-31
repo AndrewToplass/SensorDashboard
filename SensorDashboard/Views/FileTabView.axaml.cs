@@ -221,12 +221,14 @@ public partial class FileTabView : UserControl
         }
 
         var file = await DisplaySaveDialog();
-        if (file is not null)
+        if (file is null)
         {
-            await _viewModel.SaveFile(file);
+            // If user cancelled save from save dialog, tab cannot be closed.
+            return false;
         }
 
         // If user clicked Save, the tab can be closed.
+        await _viewModel.SaveFile(file);
         return true;
     }
 }
