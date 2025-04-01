@@ -3,6 +3,7 @@
              x:Class="SensorDashboard.App"
              xmlns:local="using:SensorDashboard"
              xmlns:sty="using:FluentAvalonia.Styling"
+             xmlns:ui="using:FluentAvalonia.UI.Controls"
              RequestedThemeVariant="Default">
 
     <Application.DataTemplates>
@@ -11,6 +12,22 @@
 
     <Application.Styles>
         <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
+
+        <!-- Remove duplicate tab background when using transparent bg. -->
+        <Style Selector="ui|TabViewItem:selected /template/ Border#TabContainerBorder">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <!-- Remove unnecessary separator from selected tab. -->
+        <Style Selector="ui|TabViewItem:selected /template/ Border#TabSeparator">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- Ensure title of ContentDialog uses correct font family. -->
+        <Style Selector="ui|ContentDialog:primary /template/ ContentControl#Title">
+            <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}" />
+        </Style>
+
     </Application.Styles>
 
     <Application.Resources>
@@ -29,7 +46,8 @@
                 <ResourceDictionary x:Key="Dark">
                     <BoxShadows x:Key="DataGridShadow">0 0.5 3 #80000000</BoxShadows>
 
-                    <!-- <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="{StaticResource LayerOnMicaBaseAltFillColorDefault}" /> -->
+                    <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
+                                     Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
 
                     <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#40ff4040" />
                     <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#402080ff" />

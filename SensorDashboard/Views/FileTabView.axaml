@@ -5,7 +5,7 @@
              xmlns:vm="using:SensorDashboard.ViewModels"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
              xmlns:local="using:SensorDashboard"
-             xmlns:views="clr-namespace:SensorDashboard.Views"
+             xmlns:views="using:SensorDashboard.Views"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
              x:Class="SensorDashboard.Views.FileTabView"
              x:DataType="vm:FileTabViewModel"
