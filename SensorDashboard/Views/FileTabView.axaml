@@ -42,26 +42,24 @@
             <Setter Property="Padding" Value="0" />
         </Style>
 
-        <!-- DataGrid cells and their content are updated separately,
-             meaning that the selector needs to target the inner
-             TextBlock instead of the DataGridCell itself. -->
+        <!-- Colour DataGridCells based on their numerical value. -->
         <Style Selector="DataGridCell">
             <Setter Property="Background">
                 <!-- Use a multi-binding so changes to either the grid cell
                      content, min or max values will trigger style update. -->
                 <MultiBinding Converter="{StaticResource DataGridCellColorMultiConverter}">
                     <Binding Path="((vm:FileTabViewModel)DataContext).ThresholdMinimum"
-                             FallbackValue="0"
-                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=views:FileTabView}" />
+                             RelativeSource="{RelativeSource AncestorType=views:FileTabView}"
+                             FallbackValue="0" />
                     <Binding Path="((vm:FileTabViewModel)DataContext).ThresholdMaximum"
-                             FallbackValue="100"
-                             RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=views:FileTabView}" />
+                             RelativeSource="{RelativeSource AncestorType=views:FileTabView}"
+                             FallbackValue="100" />
                     <!-- Use a reflection binding to prevent errors when
                          non-TextBlock is present in DataGridCell. -->
                     <ReflectionBinding Path="$self.((TextBlock)Content).Text"
                                        FallbackValue="" />
                     <!-- Pass self into multi-converter so dynamic resource
-                         can be applied. -->
+                         background can be applied. -->
                     <Binding Path="$self" />
                 </MultiBinding>
             </Setter>
@@ -145,6 +143,7 @@
             <ui:NumberBox AcceptsExpression="True"
                           HorizontalAlignment="Stretch"
                           SpinButtonPlacementMode="Inline"
+                          SimpleNumberFormat="0.00"
                           Value="{Binding ThresholdMinimum}"
                           Maximum="{Binding ThresholdMaximum}" />
 
@@ -152,6 +151,7 @@
             <ui:NumberBox AcceptsExpression="True"
                           HorizontalAlignment="Stretch"
                           SpinButtonPlacementMode="Inline"
+                          SimpleNumberFormat="0.00"
                           Value="{Binding ThresholdMaximum}"
                           Minimum="{Binding ThresholdMinimum} " />
         </StackPanel>
@@ -161,7 +161,7 @@
                 CornerRadius="8"
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
-                Margin="8 0 0 0"
+                Margin="8 0 -3 -3"
                 BoxShadow="{DynamicResource DataGridShadow}">
 
             <Border CornerRadius="{Binding $parent.CornerRadius}"
@@ -177,9 +177,7 @@
                           CanUserSortColumns="False"
                           SelectedIndex="{Binding DataGridSelectedIndex}" />
             </Border>
-
         </Border>
 
     </Grid>
-
 </UserControl>

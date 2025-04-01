@@ -75,6 +75,9 @@
                 <ResourceDictionary x:Key="Light">
                     <BoxShadows x:Key="DataGridShadow">0 0.5 3 #40000000</BoxShadows>
 
+                    <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
+                                     Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
+
                     <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#60ff4040" />
                     <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#602080ff" />
                     <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#6010e040" />
