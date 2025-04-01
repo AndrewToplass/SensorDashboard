@@ -122,50 +122,39 @@
 
         </ui:CommandBar>
 
-        <Grid ColumnDefinitions="*"
-              RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto"
-              Grid.Column="0"
-              Grid.Row="1"
-              VerticalAlignment="Top"
-              Margin="0 8 0 0 ">
+        <StackPanel Grid.Column="0"
+                    Grid.Row="1"
+                    VerticalAlignment="Top"
+                    Margin="0 8 0 0">
 
-            <Label Grid.Column="0" Grid.Row="0" Content="Total average:" />
-            <NumericUpDown Grid.Column="0"
-                           Grid.Row="1"
-                           IsReadOnly="True"
+            <Label Content="Total average:" />
+            <NumericUpDown IsReadOnly="True"
                            FormatString="0.00"
                            ShowButtonSpinner="False"
                            Focusable="False"
                            Value="{Binding AverageTotal}" />
 
-            <Label Grid.Column="0" Grid.Row="2" Content="Row average:" />
-            <NumericUpDown Grid.Column="0"
-                           Grid.Row="3"
-                           IsReadOnly="True"
+            <Label Content="Row average:" />
+            <NumericUpDown IsReadOnly="True"
                            FormatString="0.00"
                            ShowButtonSpinner="False"
                            Focusable="False"
                            Value="{Binding AverageRow, TargetNullValue=0}" />
 
-            <Label Grid.Column="0" Grid.Row="4" Content="Threshold min:" />
-            <ui:NumberBox Grid.Column="0"
-                          Grid.Row="5"
-                          AcceptsExpression="True"
+            <Label Content="Threshold min:" />
+            <ui:NumberBox AcceptsExpression="True"
                           HorizontalAlignment="Stretch"
                           SpinButtonPlacementMode="Inline"
                           Value="{Binding ThresholdMinimum}"
                           Maximum="{Binding ThresholdMaximum}" />
 
-            <Label Grid.Column="0" Grid.Row="6" Content="Threshold max:" />
-            <ui:NumberBox Grid.Column="0"
-                          Grid.Row="7"
-                          AcceptsExpression="True"
+            <Label Content="Threshold max:" />
+            <ui:NumberBox AcceptsExpression="True"
                           HorizontalAlignment="Stretch"
                           SpinButtonPlacementMode="Inline"
                           Value="{Binding ThresholdMaximum}"
                           Minimum="{Binding ThresholdMinimum} " />
-
-        </Grid>
+        </StackPanel>
 
         <Border Grid.Row="1"
                 Grid.Column="1"
