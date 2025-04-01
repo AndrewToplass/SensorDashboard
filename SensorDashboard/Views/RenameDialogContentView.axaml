@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:SensorDashboard.ViewModels"
+             xmlns:vm="using:SensorDashboard.ViewModels"
              mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
              x:Class="SensorDashboard.Views.RenameDialogContentView"
              x:DataType="vm:RenameDialogContentViewModel">
@@ -12,16 +12,17 @@
             <Style Selector="TextBox">
                 <Setter Property="Margin" Value="8" />
             </Style>
-            
+
             <Style Selector="Label">
                 <Setter Property="Margin" Value="8 8 8 0" />
             </Style>
         </StackPanel.Styles>
 
         <Label Content="Title:" />
-        <TextBox Text="{Binding  Title}" />
+        <TextBox Text="{Binding Title}" />
 
-        <Label Content="Column labels:" />
+        <Label Content="Column labels:"
+               IsVisible="{Binding Names.Count}" />
         <ItemsControl ItemsSource="{Binding Names}">
 
             <ItemsControl.ItemTemplate>
