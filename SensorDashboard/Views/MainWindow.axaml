@@ -3,7 +3,6 @@
                xmlns:vm="using:SensorDashboard.ViewModels"
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-               xmlns:local="clr-namespace:SensorDashboard.Views"
                xmlns:ui="using:FluentAvalonia.UI.Controls"
                xmlns:win="using:FluentAvalonia.UI.Windowing"
                mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"

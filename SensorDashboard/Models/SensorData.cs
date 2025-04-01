@@ -59,17 +59,6 @@ public partial class SensorData : ObservableObject
     }
 
     /// <summary>
-    /// Get an entire column from the sensor dataset.
-    /// </summary>
-    /// <param name="col">The column index to get.</param>
-    /// <returns>An enumerable containing the sensor data from specified column.</returns>
-    public IEnumerable<double> GetColumn(int col)
-    {
-        return Enumerable.Range(0, Rows)
-            .Select(i => this[i, col]);
-    }
-
-    /// <summary>
     /// Generate an example testing dataset.
     /// </summary>
     /// <param name="rows">The number of rows to include in the dataset.</param>

@@ -78,7 +78,7 @@ public partial class FileTabView : UserControl
             DataGridDisplay.Columns.Add(new DataGridTextColumn
             {
                 Header = _viewModel.SensorData.Labels?[col] ?? col.ToString(),
-                Binding = new Binding($"[{col}]"),
+                Binding = new Binding($"[{col}]")
             });
         }
     }
@@ -93,7 +93,7 @@ public partial class FileTabView : UserControl
         {
             Patterns = ["*.csv"],
             MimeTypes = ["text/csv"]
-        },
+        }
     ];
 
     public async Task<IStorageFile?> DisplayOpenDialog()
@@ -161,7 +161,7 @@ public partial class FileTabView : UserControl
         _viewModel.OpenSampleData();
     }
 
-    private async void ShowHotKeysButton_OnClick(object? sender, RoutedEventArgs e)
+    private void ShowHotKeysButton_OnClick(object? sender, RoutedEventArgs e)
     {
     }
 
@@ -209,7 +209,7 @@ public partial class FileTabView : UserControl
             PrimaryButtonText = "Save",
             SecondaryButtonText = "Don‘t save",
             CloseButtonText = "Cancel",
-            DefaultButton = ContentDialogButton.Primary,
+            DefaultButton = ContentDialogButton.Primary
         };
 
         var result = await dialog.ShowAsync();

@@ -1,6 +1,5 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
@@ -8,7 +7,6 @@ using Avalonia.Media;
 using SensorDashboard.ViewModels;
 using SensorDashboard.Views;
 using System;
-using Avalonia.Platform;
 using System.Runtime.InteropServices;
 
 namespace SensorDashboard;
@@ -22,7 +20,8 @@ public partial class App : Application
         // Override font chosen by FluentAvalonia.
         if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            Resources["ContentControlThemeFontFamily"] = FontFamily.Parse("Inter", new Uri("avares://Avalonia.Fonts.Inter/Assets"));
+            Resources["ContentControlThemeFontFamily"] =
+                FontFamily.Parse("Inter", new Uri("avares://Avalonia.Fonts.Inter/Assets"));
         }
     }
 
@@ -35,7 +34,7 @@ public partial class App : Application
             DisableAvaloniaDataAnnotationValidation();
             desktop.MainWindow = new MainWindow
             {
-                DataContext = new MainWindowViewModel(),
+                DataContext = new MainWindowViewModel()
             };
         }
 

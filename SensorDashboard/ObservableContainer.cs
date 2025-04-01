@@ -2,7 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SensorDashboard;
 
-public partial class ObservableContainer<T>(T initial = default(T)) : ObservableObject
+public partial class ObservableContainer<T>(T initial = default!) : ObservableObject
 {
     [ObservableProperty] private T _value = initial;
 

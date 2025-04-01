@@ -1,7 +1,6 @@
 using System.Linq;
-using SensorDashboard.Models;
 
-namespace SensorDashboard;
+namespace SensorDashboard.Models;
 
 public class DataProcessor
 {
@@ -44,19 +43,5 @@ public class DataProcessor
         }
 
         return -1;
-    }
-
-    public void Sort(double[] data)
-    {
-        for (var i = 0; i < data.Length; i++)
-        {
-            for (var j = i + 1; j < data.Length; j++)
-            {
-                if (data[i] > data[j])
-                {
-                    (data[i], data[j]) = (data[j], data[i]);
-                }
-            }
-        }
     }
 }
