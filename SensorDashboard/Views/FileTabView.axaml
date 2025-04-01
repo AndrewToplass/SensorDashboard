@@ -45,7 +45,7 @@
         <!-- DataGrid cells and their content are updated separately,
              meaning that the selector needs to target the inner
              TextBlock instead of the DataGridCell itself. -->
-        <Style Selector="DataGridCell TextBlock">
+        <Style Selector="DataGridCell">
             <Setter Property="Background">
                 <!-- Use a multi-binding so changes to either the grid cell
                      content, min or max values will trigger style update. -->
@@ -56,15 +56,19 @@
                     <Binding Path="((vm:FileTabViewModel)DataContext).ThresholdMaximum"
                              FallbackValue="100"
                              RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=views:FileTabView}" />
-                    <Binding RelativeSource="{RelativeSource Self}"
-                             Path="Text" />
+                    <!-- Use a reflection binding to prevent errors when
+                         non-TextBlock is present in DataGridCell. -->
+                    <ReflectionBinding Path="$self.((TextBlock)Content).Text"
+                                       FallbackValue="" />
+                    <!-- Pass self into multi-converter so dynamic resource
+                         can be applied. -->
+                    <Binding Path="$self" />
                 </MultiBinding>
             </Setter>
-            <Setter Property="Foreground" Value="White" />
-
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{DynamicResource DataGridCellForegroundBrush}" />
+            <Style Selector="^ TextBlock">
+                <Setter Property="TextAlignment" Value="Center" />
+            </Style>
         </Style>
 
     </UserControl.Styles>

@@ -19,11 +19,23 @@
 
                 <ResourceDictionary x:Key="Light">
                     <BoxShadows x:Key="DataGridShadow">0 0.5 3 #40000000</BoxShadows>
+
+                    <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#60ff4040" />
+                    <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#602080ff" />
+                    <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#6010e040" />
+                    <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="Black" />
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="Dark">
                     <BoxShadows x:Key="DataGridShadow">0 0.5 3 #80000000</BoxShadows>
+
                     <!-- <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected" Color="{StaticResource LayerOnMicaBaseAltFillColorDefault}" /> -->
+
+                    <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#40ff4040" />
+                    <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#402080ff" />
+                    <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#4010e040" />
+                    <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="White" />
+
                 </ResourceDictionary>
 
             </ResourceDictionary.ThemeDictionaries>
