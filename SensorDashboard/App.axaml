@@ -4,6 +4,7 @@
              xmlns:local="using:SensorDashboard"
              xmlns:sty="using:FluentAvalonia.Styling"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
+             xmlns:windowing="using:FluentAvalonia.UI.Windowing"
              RequestedThemeVariant="Default">
 
     <Application.DataTemplates>
@@ -28,6 +29,43 @@
             <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}" />
         </Style>
 
+        <Style Selector="windowing|MinMaxCloseControl /template/ Button">
+            <Style Selector="^ /template/ ui|FontIcon">
+                <Setter Property="Foreground" Value="{DynamicResource WindowControlsForegroundBrush}" />
+            </Style>
+
+            <Style Selector="^:inactive:not(:pointerover) /template/ ui|FontIcon">
+                <Setter Property="Foreground" Value="{DynamicResource WindowControlsInactiveForegroundBrush}" />
+            </Style>
+
+            <Style Selector="^:pointerover">
+                <Style Selector="^ /template/ Border">
+                    <Setter Property="Background" Value="{DynamicResource WindowControlsPointeroverBackgroundBrush}" />
+                </Style>
+            </Style>
+
+            <Style Selector="^:pressed">
+                <Style Selector="^ /template/ Border">
+                    <Setter Property="Background" Value="{DynamicResource WindowControlsPressedBackgroundBrush}" />
+                </Style>
+            </Style>
+
+            <Style Selector="^.Close">
+                <Style Selector="^:pointerover /template/ Border">
+                    <Setter Property="Background"
+                            Value="{DynamicResource WindowControlsClosePointeroverBackgroundBrush}" />
+                </Style>
+                <Style Selector="^:pointerover /template/ ui|FontIcon, ^:pressed /template/ ui|FontIcon">
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource WindowControlsClosePointeroverForegroundBrush}" />
+                </Style>
+                <Style Selector="^:pressed /template/ Border">
+                    <Setter Property="Background" Value="{DynamicResource WindowControlsClosePressedBackgroundBrush}" />
+                </Style>
+            </Style>
+
+
+        </Style>
     </Application.Styles>
 
     <Application.Resources>
@@ -41,6 +79,14 @@
                     <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#602080ff" />
                     <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#6010e040" />
                     <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="Black" />
+
+                    <SolidColorBrush x:Key="WindowControlsForegroundBrush" Color="#000000" />
+                    <SolidColorBrush x:Key="WindowControlsInactiveForegroundBrush" Color="#80000000" />
+                    <SolidColorBrush x:Key="WindowControlsPointeroverBackgroundBrush" Color="#1c000000" />
+                    <SolidColorBrush x:Key="WindowControlsPressedBackgroundBrush" Color="#30000000" />
+                    <SolidColorBrush x:Key="WindowControlsClosePointeroverBackgroundBrush" Color="#e81123" />
+                    <SolidColorBrush x:Key="WindowControlsClosePressedBackgroundBrush" Color="#dc5c66" />
+                    <SolidColorBrush x:Key="WindowControlsClosePointeroverForegroundBrush" Color="#ffffff" />
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="Dark">
@@ -54,6 +100,13 @@
                     <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#4010e040" />
                     <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="White" />
 
+                    <SolidColorBrush x:Key="WindowControlsForegroundBrush" Color="#ffffff" />
+                    <SolidColorBrush x:Key="WindowControlsInactiveForegroundBrush" Color="#80ffffff" />
+                    <SolidColorBrush x:Key="WindowControlsPointeroverBackgroundBrush" Color="#1cffffff" />
+                    <SolidColorBrush x:Key="WindowControlsPressedBackgroundBrush" Color="#30ffffff" />
+                    <SolidColorBrush x:Key="WindowControlsClosePointeroverBackgroundBrush" Color="#e81123" />
+                    <SolidColorBrush x:Key="WindowControlsClosePressedBackgroundBrush" Color="#971821" />
+                    <SolidColorBrush x:Key="WindowControlsClosePointeroverForegroundBrush" Color="#ffffff" />
                 </ResourceDictionary>
 
             </ResourceDictionary.ThemeDictionaries>
