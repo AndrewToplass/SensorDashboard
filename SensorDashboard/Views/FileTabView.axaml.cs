@@ -87,7 +87,8 @@ public partial class FileTabView : UserControl
     [
         new("Sensing4U Dataset")
         {
-            Patterns = ["*.s4u"]
+            Patterns = ["*.s4u", "*.bin"],
+            MimeTypes = ["applicaton/octet-stream"]
         },
         new("CSV Dataset")
         {
