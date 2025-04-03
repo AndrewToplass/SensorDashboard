@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -43,7 +46,8 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             SensorData = new()
             {
-                Title = title
+                Title = title,
+                HasUnsavedChanges = false
             }
         };
 
