@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace SensorDashboard;
@@ -6,7 +7,7 @@ public partial class ObservableContainer<T>(T initial = default!) : ObservableOb
 {
     [ObservableProperty] private T _value = initial;
 
-    public static implicit operator ObservableContainer<T>(T container) => new(container);
-
-    public static implicit operator T(ObservableContainer<T> container) => container.Value;
+    public override bool Equals(object? obj) => obj is ObservableContainer<T> other && Equals(other);
+    protected bool Equals(ObservableContainer<T> other) => EqualityComparer<T>.Default.Equals(Value, other.Value);
+    public override int GetHashCode() => EqualityComparer<T>.Default.GetHashCode(Value!);
 }
