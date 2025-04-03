@@ -197,7 +197,7 @@ public partial class FileTabView : UserControl
     /// </returns>
     public async Task<bool> TryClose()
     {
-        if (!_viewModel.HasUnsavedChanges)
+        if (!_viewModel.SensorData.HasUnsavedChanges)
         {
             return true;
         }

@@ -42,14 +42,18 @@
                 <Style Selector="ui|TabViewItem Button">
                     <Setter Property="FontStyle" Value="Normal" />
                 </Style>
+
+                <Style Selector="ui|TabViewItem.Unsaved">
+                    <Setter Property="FontStyle" Value="Italic" />
+                </Style>
             </ui:TabView.Styles>
 
             <ui:TabView.TabItemTemplate>
                 <DataTemplate DataType="vm:FileTabViewModel">
                     <ui:TabViewItem Header="{Binding SensorData.Title}"
                                     IconSource="Document"
-                                    FontStyle="{Binding FontStyle}"
-                                    Content="{Binding}" />
+                                    Content="{Binding}"
+                                    Classes.Unsaved="{Binding SensorData.HasUnsavedChanges}" />
                 </DataTemplate>
             </ui:TabView.TabItemTemplate>
 

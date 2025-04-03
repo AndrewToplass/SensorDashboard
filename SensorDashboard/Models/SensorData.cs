@@ -31,6 +31,8 @@ public partial class SensorData : ObservableObject
     /// </summary>
     [ObservableProperty] private double[,] _data = new double[0, 0];
 
+    [ObservableProperty] private bool _hasUnsavedChanges = false;
+
     public double this[int row, int col]
     {
         get => Data[row, col];

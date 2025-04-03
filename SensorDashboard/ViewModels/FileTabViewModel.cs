@@ -6,30 +6,21 @@ using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using SensorDashboard.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 
 namespace SensorDashboard.ViewModels;
 
-public partial class FileTabViewModel : ViewModelBase
+public partial class FileTabViewModel : ViewModelBase, IComparable<FileTabViewModel>
 {
     public FileTabViewModel()
     {
         PropertyChanged += This_OnPropertyChanged;
-        PropertyChanging += This_OnPropertyChanging;
     }
 
-    private void SensorData_OnPropertyChanged(object? sender, PropertyChangedEventArgs args)
-    {
-        HasUnsavedChanges = true;
-    }
+    public int CompareTo(FileTabViewModel? other) => SensorData.Title.CompareTo(other?.SensorData.Title);
 
     private void This_OnPropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
-        if (args.PropertyName is nameof(SensorData))
-        {
-            // Attach event listener to new sensor data property.
-            SensorData.PropertyChanged += SensorData_OnPropertyChanged;
-        }
-
         if (args.PropertyName is not nameof(DataGridSelectedIndex))
         {
             return;
@@ -45,36 +36,9 @@ public partial class FileTabViewModel : ViewModelBase
             DataGridSelectedIndex);
     }
 
-    private void This_OnPropertyChanging(object? sender, PropertyChangingEventArgs args)
-    {
-        // SensorData may be null on first assignment.
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (args.PropertyName is nameof(SensorData) && SensorData is not null)
-        {
-            // Detach event listener from now unused sensor data property.
-            SensorData.PropertyChanged -= SensorData_OnPropertyChanged;
-        }
-    }
+    [ObservableProperty] private double _thresholdMinimum = 5;
 
-    private bool _hasUnsavedChanges = false;
-
-    public bool HasUnsavedChanges
-    {
-        get => _hasUnsavedChanges;
-        private set
-        {
-            SetProperty(ref _hasUnsavedChanges, value);
-            FontStyle = value
-                ? FontStyle.Italic
-                : FontStyle.Normal;
-        }
-    }
-
-    [ObservableProperty] private FontStyle _fontStyle = FontStyle.Normal;
-
-    [ObservableProperty] private double _thresholdMinimum = 0;
-
-    [ObservableProperty] private double _thresholdMaximum = 100;
+    [ObservableProperty] private double _thresholdMaximum = 15;
 
     [ObservableProperty] private ObservableCollection<double[]> _dataGridSource = [];
 
@@ -93,7 +57,6 @@ public partial class FileTabViewModel : ViewModelBase
         set
         {
             SetProperty(ref _sensorData, value);
-            HasUnsavedChanges = false;
 
             if (value.Data.Length == 0)
             {
@@ -135,6 +98,5 @@ public partial class FileTabViewModel : ViewModelBase
         var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
         await using var stream = await file.OpenWriteAsync();
         await SensorData.SaveToStream(stream, format);
-        HasUnsavedChanges = false;
     }
 }
