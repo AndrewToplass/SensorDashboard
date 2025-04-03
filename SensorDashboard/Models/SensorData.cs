@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,7 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace SensorDashboard.Models;
 
-public partial class SensorData : ObservableObject
+public partial class SensorData : ObservableObject, IComparable<SensorData>
 {
     private string _title = null!;
 
@@ -39,6 +41,21 @@ public partial class SensorData : ObservableObject
         set => Data[row, col] = value;
     }
 
+    protected override void OnPropertyChanged(PropertyChangedEventArgs args)
+    {
+        switch (args.PropertyName)
+        {
+            case nameof(HasUnsavedChanges):
+                break;
+
+            default:
+                HasUnsavedChanges = true;
+                break;
+        }
+
+        base.OnPropertyChanged(args);
+    }
+
     /// <summary>
     /// Get the number of rows in the sensor dataset.
     /// </summary>
@@ -59,6 +76,8 @@ public partial class SensorData : ObservableObject
         return Enumerable.Range(0, Columns)
             .Select(i => this[row, i]);
     }
+
+    public int CompareTo(SensorData? other) => Title.CompareTo(other?.Title);
 
     /// <summary>
     /// Generate an example testing dataset.
@@ -82,6 +101,7 @@ public partial class SensorData : ObservableObject
             }
         }
 
+        sensorData.HasUnsavedChanges = false;
         return sensorData;
     }
 
@@ -95,14 +115,12 @@ public partial class SensorData : ObservableObject
     public static async Task<SensorData> FromStream(Stream stream, FileFormat format = FileFormat.Binary,
         string? title = null)
     {
-        if (format == FileFormat.Csv)
+        return await (format switch
         {
-            return await ReadCsvData(stream, title);
-        }
-
-        return await ReadBinaryData(stream);
+            FileFormat.Csv => ReadCsvData(stream, title),
+            _ => ReadBinaryData(stream),
+        });
     }
-
 
     /// <summary>
     /// Read binary data from stream and get sensor dataset.
@@ -110,51 +128,55 @@ public partial class SensorData : ObservableObject
     /// <param name="stream">The stream to read data from.</param>
     /// <returns>A new instance containing the parsed data.</returns>
     /// <exception cref="IOException">If binary file is invalid or other IO error occured.</exception>
-    public static Task<SensorData> ReadBinaryData(Stream stream)
+    public static async Task<SensorData> ReadBinaryData(Stream stream)
     {
-        BinaryReader reader = new(stream, Encoding.UTF8);
-
-        if (reader.ReadChar() != 'S' ||
-            reader.ReadChar() != '4' ||
-            reader.ReadChar() != 'U' ||
-            reader.ReadChar() != 'D')
+        return await Task.Run(() =>
         {
-            // Make sure the opened file matches the specification.
-            throw new IOException("Invalid file format.");
-        }
+            BinaryReader reader = new(stream, Encoding.UTF8);
 
-        var rows = reader.ReadInt32();
-        var cols = reader.ReadInt32();
-        var data = new double[rows, cols];
-        var title = reader.ReadString();
-        string[]? labels;
-
-        if (reader.ReadBoolean())
-        {
-            labels = new string[cols];
-            for (var i = 0; i < labels.Length; i++)
+            if (reader.ReadChar() != 'S' ||
+                reader.ReadChar() != '4' ||
+                reader.ReadChar() != 'U' ||
+                reader.ReadChar() != 'D')
             {
-                labels[i] = reader.ReadString();
+                // Make sure the opened file matches the specification.
+                throw new IOException("Invalid file format.");
             }
-        }
-        else
-        {
-            labels = null;
-        }
 
-        for (var i = 0; i < rows; i++)
-        {
-            for (var j = 0; j < cols; j++)
+            var rows = reader.ReadInt32();
+            var cols = reader.ReadInt32();
+            var title = reader.ReadString();
+            string[]? labels;
+
+            if (reader.ReadBoolean())
             {
-                data[i, j] = reader.ReadDouble();
+                labels = new string[cols];
+                for (var i = 0; i < labels.Length; i++)
+                {
+                    labels[i] = reader.ReadString();
+                }
             }
-        }
+            else
+            {
+                labels = null;
+            }
 
-        return Task.FromResult(new SensorData
-        {
-            Title = title,
-            Labels = labels,
-            Data = data
+            var data = new double[rows, cols];
+            for (var i = 0; i < rows; i++)
+            {
+                for (var j = 0; j < cols; j++)
+                {
+                    data[i, j] = reader.ReadDouble();
+                }
+            }
+
+            return new SensorData
+            {
+                Title = title,
+                Labels = labels,
+                Data = data,
+                HasUnsavedChanges = false
+            };
         });
     }
 
@@ -164,65 +186,69 @@ public partial class SensorData : ObservableObject
     /// <param name="stream">The stream to read data from.</param>
     /// <param name="title">Title for the dataset to use.</param>
     /// <returns>A new instance containing the parsed data.</returns>
-    public static Task<SensorData> ReadCsvData(Stream stream, string? title = null)
+    public static async Task<SensorData> ReadCsvData(Stream stream, string? title = null)
     {
-        using StreamReader reader = new(stream);
-        using TextFieldParser parser = new(reader);
-        parser.TextFieldType = FieldType.Delimited;
-        parser.Delimiters = [","];
-        parser.HasFieldsEnclosedInQuotes = true;
-        parser.TrimWhiteSpace = true;
-
-        var sensorData = new SensorData
+        return await Task.Run(() =>
         {
-            Title = title ?? "Untitled Dataset"
-        };
+            using StreamReader reader = new(stream);
+            using TextFieldParser parser = new(reader);
+            parser.TextFieldType = FieldType.Delimited;
+            parser.Delimiters = [","];
+            parser.HasFieldsEnclosedInQuotes = true;
+            parser.TrimWhiteSpace = true;
 
-        var header = parser.ReadFields();
-        if (header is not null)
-        {
-            sensorData.Labels = header;
-        }
-
-        var columnCount = sensorData.Labels?.Length ?? -1;
-        List<double[]> data = [];
-
-        while (!parser.EndOfData)
-        {
-            var line = parser.ReadFields();
-            if (line is null)
+            var sensorData = new SensorData
             {
-                continue;
+                Title = title ?? "Untitled Dataset"
+            };
+
+            var header = parser.ReadFields();
+            if (header is not null)
+            {
+                sensorData.Labels = header;
             }
 
-            if (columnCount != -1)
-            {
-                columnCount = line.Length;
-            }
+            var columnCount = sensorData.Labels?.Length ?? -1;
+            List<double[]> data = [];
 
-            var row = new double[columnCount];
-            for (var i = 0; i < columnCount; i++)
+            while (!parser.EndOfData)
             {
-                var column = i >= columnCount ? null : line[i];
-                if (double.TryParse(column, out var value))
+                var line = parser.ReadFields();
+                if (line is null)
                 {
-                    row[i] = value;
+                    continue;
+                }
+
+                if (columnCount != -1)
+                {
+                    columnCount = line.Length;
+                }
+
+                var row = new double[columnCount];
+                for (var i = 0; i < columnCount; i++)
+                {
+                    var column = i >= columnCount ? null : line[i];
+                    if (double.TryParse(column, out var value))
+                    {
+                        row[i] = value;
+                    }
+                }
+
+                data.Add(row);
+            }
+
+            sensorData.Data = new double[data.Count, columnCount];
+            for (var i = 0; i < data.Count; i++)
+            {
+                for (var j = 0; j < columnCount; j++)
+                {
+                    sensorData[i, j] = data[i][j];
                 }
             }
 
-            data.Add(row);
-        }
-
-        sensorData.Data = new double[data.Count, columnCount];
-        for (var i = 0; i < data.Count; i++)
-        {
-            for (var j = 0; j < columnCount; j++)
-            {
-                sensorData[i, j] = data[i][j];
-            }
-        }
-
-        return Task.FromResult(sensorData);
+            sensorData.HasUnsavedChanges = false;
+            return sensorData;
+        });
     }
 
     /// <summary>
@@ -233,14 +259,12 @@ public partial class SensorData : ObservableObject
     /// <param name="format">The file format to write the data in.</param>
     public async Task SaveToStream(Stream stream, FileFormat format = FileFormat.Binary)
     {
-        if (format == FileFormat.Csv)
+        await (format switch
         {
-            await WriteCsvData(stream);
-        }
-        else
-        {
-            await WriteBinaryData(stream);
-        }
+            FileFormat.Csv => WriteCsvData(stream),
+            _ => WriteBinaryData(stream),
+        });
+        HasUnsavedChanges = false;
     }
 
     /// <summary>
@@ -294,8 +318,8 @@ public partial class SensorData : ObservableObject
         await using StreamWriter writer = new(stream, Encoding.UTF8);
 
         // Write labels as header row.
-        var headers = Enumerable.Range(0, Columns)
-            .Select(i => '"' + (Labels?[i] ?? $"Column {i}").Replace("\"", "\"\"") + '"');
+        var headers = Labels?.Select((c, i) => '"' + c.Replace("\"", "\"\"") + '"')
+            ?? Enumerable.Range(0, Columns).Select(i => $"Column {i}");
 
         await writer.WriteLineAsync(string.Join(", ", headers));
 
