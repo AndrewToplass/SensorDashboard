@@ -77,7 +77,7 @@ public partial class SensorData : ObservableObject, IComparable<SensorData>
             .Select(i => this[row, i]);
     }
 
-    public int CompareTo(SensorData? other) => Title.CompareTo(other?.Title);
+    public int CompareTo(SensorData? other) => string.Compare(Title, other?.Title, StringComparison.Ordinal);
 
     /// <summary>
     /// Generate an example testing dataset.
@@ -319,7 +319,7 @@ public partial class SensorData : ObservableObject, IComparable<SensorData>
 
         // Write labels as header row.
         var headers = Labels?.Select((c, i) => '"' + c.Replace("\"", "\"\"") + '"')
-            ?? Enumerable.Range(0, Columns).Select(i => $"Column {i}");
+                      ?? Enumerable.Range(0, Columns).Select(i => $"Column {i}");
 
         await writer.WriteLineAsync(string.Join(", ", headers));
 

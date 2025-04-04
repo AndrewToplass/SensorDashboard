@@ -21,7 +21,7 @@ public class DataGridCellColorMultiConverter : AvaloniaObject, IMultiValueConver
         if (values[0] is not double min ||
             values[1] is not double max ||
             values[2] is not string content ||
-            values[3] is not DataGridCell cell)
+            values[3] is not TreeDataGridCell cell)
         {
             return AvaloniaProperty.UnsetValue;
         }

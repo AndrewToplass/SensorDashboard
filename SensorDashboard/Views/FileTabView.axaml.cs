@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using Avalonia.Data;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
 using FluentAvalonia.UI.Controls;
@@ -31,56 +29,6 @@ public partial class FileTabView : UserControl
         }
 
         _viewModel = vm;
-        _viewModel.PropertyChanged += ViewModel_PropertyChanged;
-        _viewModel.PropertyChanging += ViewModel_PropertyChanging;
-        _viewModel.SensorData.PropertyChanged += SensorData_PropertyChanged;
-        ApplyGridColumns();
-    }
-
-    protected override void OnUnloaded(RoutedEventArgs e)
-    {
-        base.OnUnloaded(e);
-        _viewModel.PropertyChanged -= ViewModel_PropertyChanged;
-        _viewModel.PropertyChanging -= ViewModel_PropertyChanging;
-        _viewModel.SensorData.PropertyChanged -= SensorData_PropertyChanged;
-    }
-
-    private void ViewModel_PropertyChanged(object? sender, PropertyChangedEventArgs args)
-    {
-        if (args.PropertyName is nameof(_viewModel.SensorData))
-        {
-            // Attach event listener to SensorData of view model.
-            _viewModel.SensorData.PropertyChanged += SensorData_PropertyChanged;
-            ApplyGridColumns();
-        }
-    }
-
-    private void ViewModel_PropertyChanging(object? sender, PropertyChangingEventArgs args)
-    {
-        if (args.PropertyName is nameof(_viewModel.SensorData))
-        {
-            // Detach event listener as SensorData object is no longer part of
-            // the view model.
-            _viewModel.SensorData.PropertyChanged -= SensorData_PropertyChanged;
-        }
-    }
-
-    private void SensorData_PropertyChanged(object? sender, PropertyChangedEventArgs args)
-    {
-        ApplyGridColumns();
-    }
-
-    private void ApplyGridColumns()
-    {
-        DataGridDisplay.Columns.Clear();
-        for (var col = 0; col < _viewModel.SensorData.Columns; col++)
-        {
-            DataGridDisplay.Columns.Add(new DataGridTextColumn
-            {
-                Header = _viewModel.SensorData.Labels?[col] ?? col.ToString(),
-                Binding = new Binding($"[{col}]")
-            });
-        }
     }
 
     public static readonly IReadOnlyList<FilePickerFileType> FileTypes =

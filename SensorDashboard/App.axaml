@@ -3,8 +3,6 @@
              x:Class="SensorDashboard.App"
              xmlns:local="using:SensorDashboard"
              xmlns:sty="using:FluentAvalonia.Styling"
-             xmlns:ui="using:FluentAvalonia.UI.Controls"
-             xmlns:windowing="using:FluentAvalonia.UI.Windowing"
              RequestedThemeVariant="Default">
 
     <Application.DataTemplates>
@@ -13,106 +11,24 @@
 
     <Application.Styles>
         <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
+        <StyleInclude Source="avares://Avalonia.Controls.TreeDataGrid/Themes/Fluent.axaml" />
 
-        <!-- Remove duplicate tab background when using transparent bg. -->
-        <Style Selector="ui|TabViewItem:selected /template/ Border#TabContainerBorder">
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
+        <!-- Include custom app styles. -->
+        <StyleInclude Source="/Assets/Styles.axaml" />
+        <StyleInclude Source="/Assets/TreeDataGrid/Styles.axaml" />
 
-        <!-- Remove unnecessary separator from selected tab. -->
-        <Style Selector="ui|TabViewItem:selected /template/ Border#TabSeparator">
-            <Setter Property="IsVisible" Value="False" />
-        </Style>
-
-        <!-- Ensure title of ContentDialog uses correct font family. -->
-        <Style Selector="ui|ContentDialog:primary /template/ ContentControl#Title">
-            <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}" />
-        </Style>
-
-        <Style Selector="windowing|MinMaxCloseControl /template/ Button">
-            <Style Selector="^ /template/ ui|FontIcon">
-                <Setter Property="Foreground" Value="{DynamicResource WindowControlsForegroundBrush}" />
-            </Style>
-
-            <Style Selector="^:inactive:not(:pointerover) /template/ ui|FontIcon">
-                <Setter Property="Foreground" Value="{DynamicResource WindowControlsInactiveForegroundBrush}" />
-            </Style>
-
-            <Style Selector="^:pointerover">
-                <Style Selector="^ /template/ Border">
-                    <Setter Property="Background" Value="{DynamicResource WindowControlsPointeroverBackgroundBrush}" />
-                </Style>
-            </Style>
-
-            <Style Selector="^:pressed">
-                <Style Selector="^ /template/ Border">
-                    <Setter Property="Background" Value="{DynamicResource WindowControlsPressedBackgroundBrush}" />
-                </Style>
-            </Style>
-
-            <Style Selector="^.Close">
-                <Style Selector="^:pointerover /template/ Border">
-                    <Setter Property="Background"
-                            Value="{DynamicResource WindowControlsClosePointeroverBackgroundBrush}" />
-                </Style>
-                <Style Selector="^:pointerover /template/ ui|FontIcon, ^:pressed /template/ ui|FontIcon">
-                    <Setter Property="Foreground"
-                            Value="{DynamicResource WindowControlsClosePointeroverForegroundBrush}" />
-                </Style>
-                <Style Selector="^:pressed /template/ Border">
-                    <Setter Property="Background" Value="{DynamicResource WindowControlsClosePressedBackgroundBrush}" />
-                </Style>
-            </Style>
-
-
-        </Style>
     </Application.Styles>
 
     <Application.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.ThemeDictionaries>
-
-                <ResourceDictionary x:Key="Light">
-                    <BoxShadows x:Key="DataGridShadow">0 0.5 3 #40000000</BoxShadows>
-
-                    <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
-                                     Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
-
-                    <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#60ff4040" />
-                    <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#602080ff" />
-                    <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#6010e040" />
-                    <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="Black" />
-
-                    <SolidColorBrush x:Key="WindowControlsForegroundBrush" Color="#000000" />
-                    <SolidColorBrush x:Key="WindowControlsInactiveForegroundBrush" Color="#80000000" />
-                    <SolidColorBrush x:Key="WindowControlsPointeroverBackgroundBrush" Color="#1c000000" />
-                    <SolidColorBrush x:Key="WindowControlsPressedBackgroundBrush" Color="#30000000" />
-                    <SolidColorBrush x:Key="WindowControlsClosePointeroverBackgroundBrush" Color="#e81123" />
-                    <SolidColorBrush x:Key="WindowControlsClosePressedBackgroundBrush" Color="#dc5c66" />
-                    <SolidColorBrush x:Key="WindowControlsClosePointeroverForegroundBrush" Color="#ffffff" />
-                </ResourceDictionary>
-
-                <ResourceDictionary x:Key="Dark">
-                    <BoxShadows x:Key="DataGridShadow">0 0.5 3 #80000000</BoxShadows>
-
-                    <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
-                                     Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
-
-                    <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#40ff4040" />
-                    <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#402080ff" />
-                    <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#4010e040" />
-                    <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="White" />
-
-                    <SolidColorBrush x:Key="WindowControlsForegroundBrush" Color="#ffffff" />
-                    <SolidColorBrush x:Key="WindowControlsInactiveForegroundBrush" Color="#80ffffff" />
-                    <SolidColorBrush x:Key="WindowControlsPointeroverBackgroundBrush" Color="#1cffffff" />
-                    <SolidColorBrush x:Key="WindowControlsPressedBackgroundBrush" Color="#30ffffff" />
-                    <SolidColorBrush x:Key="WindowControlsClosePointeroverBackgroundBrush" Color="#e81123" />
-                    <SolidColorBrush x:Key="WindowControlsClosePressedBackgroundBrush" Color="#971821" />
-                    <SolidColorBrush x:Key="WindowControlsClosePointeroverForegroundBrush" Color="#ffffff" />
-                </ResourceDictionary>
-
-            </ResourceDictionary.ThemeDictionaries>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Include custom app resources. -->
+                <MergeResourceInclude Source="/Assets/Colours.axaml" />
+                <MergeResourceInclude Source="/Assets/TreeDataGrid/Colours.axaml" />
+                <!-- Not using these resources, but the TreeDataGrid depends on them. -->
+                <MergeResourceInclude Source="/Assets/TreeDataGrid/SystemBase.axaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
+
 </Application>

@@ -1,0 +1,57 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
+        xmlns:windowing="using:FluentAvalonia.UI.Windowing">
+
+    <!-- Remove duplicate tab background when using transparent bg. -->
+    <Style Selector="ui|TabViewItem:selected /template/ Border#TabContainerBorder">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!-- Remove unnecessary separator from selected tab. -->
+    <Style Selector="ui|TabViewItem:selected /template/ Border#TabSeparator">
+        <Setter Property="IsVisible" Value="False" />
+    </Style>
+
+    <!-- Ensure title of ContentDialog uses correct font family. -->
+    <Style Selector="ui|ContentDialog:primary /template/ ContentControl#Title">
+        <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}" />
+    </Style>
+
+    <Style Selector="windowing|MinMaxCloseControl /template/ Button">
+        <Style Selector="^ /template/ ui|FontIcon">
+            <Setter Property="Foreground" Value="{DynamicResource WindowControlsForegroundBrush}" />
+        </Style>
+
+        <Style Selector="^:inactive:not(:pointerover) /template/ ui|FontIcon">
+            <Setter Property="Foreground" Value="{DynamicResource WindowControlsInactiveForegroundBrush}" />
+        </Style>
+
+        <Style Selector="^:pointerover">
+            <Style Selector="^ /template/ Border">
+                <Setter Property="Background" Value="{DynamicResource WindowControlsPointeroverBackgroundBrush}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:pressed">
+            <Style Selector="^ /template/ Border">
+                <Setter Property="Background" Value="{DynamicResource WindowControlsPressedBackgroundBrush}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^.Close">
+            <Style Selector="^:pointerover /template/ Border">
+                <Setter Property="Background"
+                        Value="{DynamicResource WindowControlsClosePointeroverBackgroundBrush}" />
+            </Style>
+            <Style Selector="^:pointerover /template/ ui|FontIcon, ^:pressed /template/ ui|FontIcon">
+                <Setter Property="Foreground"
+                        Value="{DynamicResource WindowControlsClosePointeroverForegroundBrush}" />
+            </Style>
+            <Style Selector="^:pressed /template/ Border">
+                <Setter Property="Background" Value="{DynamicResource WindowControlsClosePressedBackgroundBrush}" />
+            </Style>
+        </Style>
+
+    </Style>
+</Styles>

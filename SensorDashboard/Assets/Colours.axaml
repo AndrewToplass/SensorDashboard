@@ -1,0 +1,47 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ResourceDictionary.ThemeDictionaries>
+
+        <ResourceDictionary x:Key="Default">
+            <BoxShadows x:Key="DataGridShadow">0 0.5 3 #40000000</BoxShadows>
+
+            <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
+                             Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
+
+            <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#60ff4040" />
+            <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#602080ff" />
+            <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#6010e040" />
+            <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="Black" />
+
+            <SolidColorBrush x:Key="WindowControlsForegroundBrush" Color="#000000" />
+            <SolidColorBrush x:Key="WindowControlsInactiveForegroundBrush" Color="#80000000" />
+            <SolidColorBrush x:Key="WindowControlsPointeroverBackgroundBrush" Color="#1c000000" />
+            <SolidColorBrush x:Key="WindowControlsPressedBackgroundBrush" Color="#30000000" />
+            <SolidColorBrush x:Key="WindowControlsClosePointeroverBackgroundBrush" Color="#e81123" />
+            <SolidColorBrush x:Key="WindowControlsClosePressedBackgroundBrush" Color="#dc5c66" />
+            <SolidColorBrush x:Key="WindowControlsClosePointeroverForegroundBrush" Color="#ffffff" />
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Dark">
+            <BoxShadows x:Key="DataGridShadow">0 0.5 3 #80000000</BoxShadows>
+
+            <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
+                             Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
+
+            <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#40ff4040" />
+            <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#402080ff" />
+            <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#4010e040" />
+            <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="White" />
+
+            <SolidColorBrush x:Key="WindowControlsForegroundBrush" Color="#ffffff" />
+            <SolidColorBrush x:Key="WindowControlsInactiveForegroundBrush" Color="#80ffffff" />
+            <SolidColorBrush x:Key="WindowControlsPointeroverBackgroundBrush" Color="#1cffffff" />
+            <SolidColorBrush x:Key="WindowControlsPressedBackgroundBrush" Color="#30ffffff" />
+            <SolidColorBrush x:Key="WindowControlsClosePointeroverBackgroundBrush" Color="#e81123" />
+            <SolidColorBrush x:Key="WindowControlsClosePressedBackgroundBrush" Color="#971821" />
+            <SolidColorBrush x:Key="WindowControlsClosePointeroverForegroundBrush" Color="#ffffff" />
+        </ResourceDictionary>
+
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

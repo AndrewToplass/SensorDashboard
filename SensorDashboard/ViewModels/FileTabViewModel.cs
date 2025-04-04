@@ -1,77 +1,59 @@
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Media;
 using Avalonia.Platform.Storage;
 using SensorDashboard.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
-using System;
+using Avalonia.Controls;
+using Avalonia.Controls.Models.TreeDataGrid;
+using Avalonia.Controls.Selection;
 
 namespace SensorDashboard.ViewModels;
 
-public partial class FileTabViewModel : ViewModelBase, IComparable<FileTabViewModel>
+public partial class FileTabViewModel : ViewModelBase
 {
     public FileTabViewModel()
     {
-        PropertyChanged += This_OnPropertyChanged;
-    }
-
-    public int CompareTo(FileTabViewModel? other) => SensorData.Title.CompareTo(other?.SensorData.Title);
-
-    private void This_OnPropertyChanged(object? sender, PropertyChangedEventArgs args)
-    {
-        if (args.PropertyName is not nameof(DataGridSelectedIndex))
+        var selection = new TreeDataGridRowSelectionModel<double[]>(DataGridSource)
         {
-            return;
-        }
-
-        if (DataGridSelectedIndex == -1)
-        {
-            AverageRow = null;
-            return;
-        }
-
-        AverageRow = DataProcessor.Instance.AverageOfRow(SensorData,
-            DataGridSelectedIndex);
+            SingleSelect = true
+        };
+        DataGridSource.Selection = selection;
+        selection.PropertyChanged += TreeDataGridRowSelectionModel_PropertyChanged;
     }
 
     [ObservableProperty] private double _thresholdMinimum = 5;
 
     [ObservableProperty] private double _thresholdMaximum = 15;
 
-    [ObservableProperty] private ObservableCollection<double[]> _dataGridSource = [];
-
-    [ObservableProperty] private int _dataGridSelectedIndex;
+    [ObservableProperty] private FlatTreeDataGridSource<double[]> _dataGridSource = new([]);
 
     [ObservableProperty] private double _averageTotal;
 
     [ObservableProperty] private double? _averageRow;
 
     // Set by required property SensorData.
-    private SensorData _sensorData = null!;
+    private SensorData _sensorData = new() { Title = "" };
 
     public required SensorData SensorData
     {
         get => _sensorData;
         set
         {
+            SensorData.PropertyChanged -= SensorData_PropertyChanged;
             SetProperty(ref _sensorData, value);
+            SensorData.PropertyChanged += SensorData_PropertyChanged;
+            ApplyDataGridColumns();
 
-            if (value.Data.Length == 0)
+            if (SensorData.Data.Length == 0)
             {
-                DataGridSource = [];
+                DataGridSource.Items = [];
                 AverageTotal = 0;
                 return;
             }
 
-            ObservableCollection<double[]> source = [];
-            for (var row = 0; row < value.Rows; row++)
-            {
-                source.Add(value.GetRow(row).ToArray());
-            }
-
-            DataGridSource = source;
+            DataGridSource.Items = Enumerable.Range(0, SensorData.Rows)
+                .Select(i => SensorData.GetRow(i).ToArray()).ToArray();
             AverageTotal = DataProcessor.Instance.Average(SensorData);
         }
     }
@@ -98,5 +80,38 @@ public partial class FileTabViewModel : ViewModelBase, IComparable<FileTabViewMo
         var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
         await using var stream = await file.OpenWriteAsync();
         await SensorData.SaveToStream(stream, format);
+    }
+
+    private void ApplyDataGridColumns()
+    {
+        DataGridSource.Columns.Clear();
+        DataGridSource.Columns.AddRange(
+            Enumerable.Range(0, SensorData.Columns)
+                .Select(i => new TextColumn<double[], double>(
+                    header: SensorData.Labels?[i] ?? i.ToString(),
+                    getter: row => row[i],
+                    width: null,
+                    options: null
+                )));
+    }
+
+    private void TreeDataGridRowSelectionModel_PropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (sender is not TreeDataGridRowSelectionModel<double[]> selection ||
+            args.PropertyName is not nameof(selection.SelectedIndex) ||
+            selection.SelectedIndex.Count < 1)
+        {
+            return;
+        }
+
+        AverageRow = DataProcessor.Instance.AverageOfRow(SensorData, selection.SelectedIndex[0]);
+    }
+
+    private void SensorData_PropertyChanged(object? _, PropertyChangedEventArgs args)
+    {
+        if (args.PropertyName is nameof(SensorData.Labels))
+        {
+            ApplyDataGridColumns();
+        }
     }
 }
