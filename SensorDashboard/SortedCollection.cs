@@ -47,13 +47,23 @@ public class SortedCollection<T> : IList<T>, IList, INotifyCollectionChanged, IN
     public int Count => _items.Count;
 
     /// <summary>
-    /// Get/set a specific item in the collection by index.
+    /// Get a specific item in the collection by index.
     /// </summary>
-    /// <param name="index">The index of the element to get/set.</param>
+    /// <param name="index">The index of the element to get.</param>
     public T this[int index]
     {
         get => _items[index];
-        set => _items[index] = value;
+        set
+        {
+            _items[index].PropertyChanged -= Item_PropertyChanged;
+            _items.RemoveAt(index);
+
+            var (newIndex, _) = FindSortedIndex(value);
+            _items.Insert(newIndex, value);
+
+            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
     }
 
     /// <summary>
@@ -174,7 +184,7 @@ public class SortedCollection<T> : IList<T>, IList, INotifyCollectionChanged, IN
     /// <summary>
     /// Returns whether collection contains specified item.
     /// </summary>
-    /// <param name="item">Item to to check for in collection.</param>
+    /// <param name="item">Item to check for in collection.</param>
     /// <returns>True if the item is in the collection, false if not.</returns>
     public bool Contains(T item) => _items.Contains(item);
 
@@ -289,7 +299,7 @@ public class SortedCollection<T> : IList<T>, IList, INotifyCollectionChanged, IN
 
     object? IList.this[int index]
     {
-        get => (_items as IList)[index];
-        set => (_items as IList)[index] = value;
+        get => this[index];
+        set => this[index] = CheckType(value);
     }
 }
