@@ -9,6 +9,6 @@ public class SensorDataTitleComparer : IComparer
     {
         var titleA = (a as SensorData)?.Title ?? a as string;
         var titleB = (b as SensorData)?.Title ?? b as string;
-        return string.Compare(titleA, titleB, StringComparison.Ordinal);
+        return string.Compare(titleA, titleB, StringComparison.OrdinalIgnoreCase);
     }
 }

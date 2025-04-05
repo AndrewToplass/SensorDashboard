@@ -10,7 +10,7 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace SensorDashboard.Models;
 
-public partial class SensorData : ObservableObject, IComparable<SensorData>
+public partial class SensorData : ObservableObject
 {
     private string _title = null!;
 
@@ -76,8 +76,6 @@ public partial class SensorData : ObservableObject, IComparable<SensorData>
         return Enumerable.Range(0, Columns)
             .Select(i => this[row, i]);
     }
-
-    public int CompareTo(SensorData? other) => string.Compare(Title, other?.Title, StringComparison.Ordinal);
 
     /// <summary>
     /// Generate an example testing dataset.
