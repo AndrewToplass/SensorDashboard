@@ -22,13 +22,7 @@ public partial class FileTabView : UserControl
     protected override void OnDataContextChanged(EventArgs e)
     {
         base.OnDataContextChanged(e);
-
-        if (DataContext is not FileTabViewModel vm)
-        {
-            return;
-        }
-
-        _viewModel = vm;
+        _viewModel = (DataContext as FileTabViewModel)!;
     }
 
     public static readonly IReadOnlyList<FilePickerFileType> FileTypes =
@@ -36,7 +30,7 @@ public partial class FileTabView : UserControl
         new("Sensing4U Dataset")
         {
             Patterns = ["*.s4u", "*.bin"],
-            MimeTypes = ["applicaton/octet-stream"]
+            MimeTypes = ["application/octet-stream"]
         },
         new("CSV Dataset")
         {
@@ -92,26 +86,33 @@ public partial class FileTabView : UserControl
         var file = await DisplayOpenDialog();
         if (file is not null)
         {
-            await _viewModel.OpenFile(file);
+            await _viewModel.OpenFile(file.Path.LocalPath);
         }
     }
 
     private async void SaveFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
+        if (_viewModel.SensorData.FilePath is not null)
+        {
+            await _viewModel.SaveFile(_viewModel.SensorData.FilePath);
+            return;
+        }
+
+        SaveFileAsButton_OnClick(sender, e);
+    }
+
+    private async void SaveFileAsButton_OnClick(object? sender, RoutedEventArgs e)
+    {
         var file = await DisplaySaveDialog();
         if (file is not null)
         {
-            await _viewModel.SaveFile(file);
+            await _viewModel.SaveFile(file.Path.LocalPath);
         }
     }
 
     private void OpenSampleDataButton_OnClick(object? sender, RoutedEventArgs e)
     {
         _viewModel.OpenSampleData();
-    }
-
-    private void ShowHotKeysButton_OnClick(object? sender, RoutedEventArgs e)
-    {
     }
 
     private async void RenameDatasetButton_OnClick(object? sender, RoutedEventArgs e)
@@ -162,11 +163,17 @@ public partial class FileTabView : UserControl
         };
 
         var result = await dialog.ShowAsync();
-
         if (result != ContentDialogResult.Primary)
         {
             // Tab can be close if user chose not to save.
             return result == ContentDialogResult.Secondary;
+        }
+
+        if (_viewModel.SensorData.FilePath is not null)
+        {
+            // File already has path associated, dialog not displayed.
+            await _viewModel.SaveFile(_viewModel.SensorData.FilePath);
+            return true;
         }
 
         var file = await DisplaySaveDialog();
@@ -177,7 +184,7 @@ public partial class FileTabView : UserControl
         }
 
         // If user clicked Save, the tab can be closed.
-        await _viewModel.SaveFile(file);
+        await _viewModel.SaveFile(file.Path.LocalPath);
         return true;
     }
 }

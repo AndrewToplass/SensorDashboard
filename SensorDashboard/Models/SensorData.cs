@@ -27,6 +27,8 @@ public partial class SensorData : ObservableObject
     /// </summary>
     [ObservableProperty] private string[]? _labels;
 
+    [ObservableProperty] private string? _filePath;
+
     /// <summary>
     /// The sensor dataset 2D array containing sensor values.
     /// </summary>
@@ -45,6 +47,7 @@ public partial class SensorData : ObservableObject
         switch (args.PropertyName)
         {
             case nameof(HasUnsavedChanges):
+            case nameof(FilePath):
                 break;
 
             default:
@@ -103,20 +106,20 @@ public partial class SensorData : ObservableObject
     }
 
     /// <summary>
-    /// Read sensor dataset from stream.
+    /// Read sensor dataset from a file path.
     /// </summary>
-    /// <param name="stream">The stream to read data from.</param>
-    /// <param name="format">The file format to read the data in.</param>
-    /// <param name="title">Optional title to pass to CSV reading, unused for binary reading.</param>
+    /// <param name="filePath">The file path to open and read data from.</param>
     /// <returns>A new instance containing the parsed data.</returns>
-    public static async Task<SensorData> FromStreamAsync(Stream stream, FileFormat format = FileFormat.Binary,
-        string? title = null)
+    public static async Task<SensorData> FromFileAsync(string filePath)
     {
-        return await (format switch
-        {
-            FileFormat.Csv => ReadCsvDataAsync(stream, title),
-            _ => ReadBinaryDataAsync(stream),
-        });
+        await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+
+        var sensorData = filePath.EndsWith(".csv")
+            ? await ReadCsvDataAsync(stream, Path.GetFileNameWithoutExtension(filePath))
+            : await ReadBinaryDataAsync(stream);
+
+        sensorData.FilePath = filePath;
+        return sensorData;
     }
 
     /// <summary>
@@ -129,7 +132,7 @@ public partial class SensorData : ObservableObject
     {
         return await Task.Run(() =>
         {
-            BinaryReader reader = new(stream, Encoding.UTF8);
+            var reader = new BinaryReader(stream, Encoding.UTF8);
 
             if (reader.ReadChar() != 'S' ||
                 reader.ReadChar() != '4' ||
@@ -252,16 +255,22 @@ public partial class SensorData : ObservableObject
     /// Save data from current instance to the specified stream, either in
     /// Binary or CSV format.
     /// </summary>
-    /// <param name="stream">The stream to write data to.</param>
-    /// <param name="format">The file format to write the data in.</param>
-    public async Task SaveToStreamAsync(Stream stream, FileFormat format = FileFormat.Binary)
+    /// <param name="filePath">The file path to write data to.</param>
+    public async Task SaveToFileAsync(string filePath)
     {
-        await (format switch
+        await using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
+
+        if (filePath.EndsWith(".csv"))
         {
-            FileFormat.Csv => WriteCsvDataAsync(stream),
-            _ => WriteBinaryDataAsync(stream),
-        });
+            await WriteCsvDataAsync(stream);
+        }
+        else
+        {
+            await WriteBinaryDataAsync(stream);
+        }
+
         HasUnsavedChanges = false;
+        FilePath = filePath;
     }
 
     /// <summary>
@@ -329,10 +338,4 @@ public partial class SensorData : ObservableObject
 
         await writer.WriteLineAsync();
     }
-}
-
-public enum FileFormat
-{
-    Binary,
-    Csv
 }

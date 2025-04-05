@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Avalonia.Platform.Storage;
 using SensorDashboard.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Controls;
@@ -61,18 +60,14 @@ public partial class FileTabViewModel : ViewModelBase
         SensorData = DataProcessor.Instance.OpenTestDataset();
     }
 
-    public async Task OpenFile(IStorageFile file)
+    public async Task OpenFile(string filePath)
     {
-        await using var stream = await file.OpenReadAsync();
-        var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
-        SensorData = await DataProcessor.Instance.OpenDatasetAsync(stream, format);
+        SensorData = await DataProcessor.Instance.OpenDatasetAsync(filePath);
     }
 
-    public async Task SaveFile(IStorageFile file)
+    public async Task SaveFile(string filePath)
     {
-        var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
-        await using var stream = await file.OpenWriteAsync();
-        await DataProcessor.Instance.SaveDatasetAsync(SensorData, stream, format);
+        await DataProcessor.Instance.SaveDatasetAsync(SensorData, filePath);
     }
 
     private void ApplyDataGridColumns()

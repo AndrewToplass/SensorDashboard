@@ -83,17 +83,20 @@
                 <ui:CommandBarButton
                     Label="Open"
                     IconSource="Folder"
-                    Click="OpenFileButton_OnClick" />
+                    Click="OpenFileButton_OnClick"
+                    HotKey="{OnPlatform Ctrl+O, macOS=Cmd+O}" />
 
                 <ui:CommandBarButton
                     Label="Save"
                     IconSource="Save"
-                    Click="SaveFileButton_OnClick" />
+                    Click="SaveFileButton_OnClick"
+                    HotKey="{OnPlatform Ctrl+S, macOS=Cmd+S}" />
 
                 <ui:CommandBarButton
                     Label="Rename Dataset"
                     IconSource="Edit"
-                    Click="RenameDatasetButton_OnClick" />
+                    Click="RenameDatasetButton_OnClick"
+                    HotKey="{OnPlatform Ctrl+R, macOS=Cmd+R}" />
 
             </ui:CommandBar.PrimaryCommands>
 
@@ -105,9 +108,10 @@
                     Click="OpenSampleDataButton_OnClick" />
 
                 <ui:CommandBarButton
-                    Label="Show Hot Keys"
-                    IconSource="Keyboard"
-                    Click="ShowHotKeysButton_OnClick" />
+                    Label="Save As"
+                    IconSource="Save"
+                    Click="SaveFileAsButton_OnClick"
+                    HotKey="{OnPlatform Ctrl+Shift+S, macOS=Cmd+Shift+S}" />
 
             </ui:CommandBar.SecondaryCommands>
 

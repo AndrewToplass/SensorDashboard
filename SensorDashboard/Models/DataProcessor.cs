@@ -1,4 +1,3 @@
-using System.IO;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,15 +28,14 @@ public partial class DataProcessor : ObservableObject
 
     public double AverageOfDatasetRow(SensorData data, int row) => data.GetRow(row).Average();
 
-    public async Task<SensorData> OpenDatasetAsync(Stream stream, FileFormat fileFormat)
+    public async Task<SensorData> OpenDatasetAsync(string filePath)
     {
-        var dataset = await SensorData.FromStreamAsync(stream, fileFormat);
+        var dataset = await SensorData.FromFileAsync(filePath);
         Datasets.Add(dataset);
         return dataset;
     }
 
-    public async Task SaveDatasetAsync(SensorData dataset, Stream stream, FileFormat fileFormat) =>
-        await dataset.SaveToStreamAsync(stream, fileFormat);
+    public async Task SaveDatasetAsync(SensorData dataset, string filePath) => await dataset.SaveToFileAsync(filePath);
 
     public void CloseDataset(SensorData dataset) => Datasets.Remove(dataset);
 
