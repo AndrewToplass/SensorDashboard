@@ -15,10 +15,17 @@ public partial class DataProcessor : ObservableObject
 
     [ObservableProperty] private SortedCollection<SensorData> _datasets = new(new SensorDataTitleComparer());
 
-    public double AverageOfDataset(SensorData data) =>
-        Enumerable.Range(0, data.Rows)
+    public double AverageOfDataset(SensorData data)
+    {
+        if (data.Rows == 0)
+        {
+            return 0;
+        }
+
+        return Enumerable.Range(0, data.Rows)
             .SelectMany(data.GetRow)
             .Average();
+    }
 
     public double AverageOfDatasetRow(SensorData data, int row) => data.GetRow(row).Average();
 

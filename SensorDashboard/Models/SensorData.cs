@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -31,14 +30,14 @@ public partial class SensorData : ObservableObject
     /// <summary>
     /// The sensor dataset 2D array containing sensor values.
     /// </summary>
-    [ObservableProperty] private double[,] _data = new double[0, 0];
+    private double[,] _data = new double[0, 0];
 
     [ObservableProperty] private bool _hasUnsavedChanges = false;
 
     public double this[int row, int col]
     {
-        get => Data[row, col];
-        set => Data[row, col] = value;
+        get => _data[row, col];
+        set => SetProperty(_data[row, col], value, _data, (data, newValue) => data[row, col] = newValue);
     }
 
     protected override void OnPropertyChanged(PropertyChangedEventArgs args)
@@ -59,12 +58,12 @@ public partial class SensorData : ObservableObject
     /// <summary>
     /// Get the number of rows in the sensor dataset.
     /// </summary>
-    public int Rows => Data.GetLength(0);
+    public int Rows => _data.GetLength(0);
 
     /// <summary>
     /// Get the number of columns in the sensor dataset.
     /// </summary>
-    public int Columns => Data.GetLength(1);
+    public int Columns => _data.GetLength(1);
 
     /// <summary>
     /// Get an entire row from the sensor dataset.
@@ -88,7 +87,7 @@ public partial class SensorData : ObservableObject
         {
             Title = "Sensor Data Test",
             Labels = ["First", "Second", "Third", "Fourth", "Fifth"],
-            Data = new double[rows, 5]
+            _data = new double[rows, 5]
         };
 
         for (var i = 0; i < sensorData.Rows; i++)
@@ -172,7 +171,7 @@ public partial class SensorData : ObservableObject
             {
                 Title = title,
                 Labels = labels,
-                Data = data,
+                _data = data,
                 HasUnsavedChanges = false
             };
         });
@@ -235,7 +234,7 @@ public partial class SensorData : ObservableObject
                 data.Add(row);
             }
 
-            sensorData.Data = new double[data.Count, columnCount];
+            sensorData._data = new double[data.Count, columnCount];
             for (var i = 0; i < data.Count; i++)
             {
                 for (var j = 0; j < columnCount; j++)
@@ -302,7 +301,7 @@ public partial class SensorData : ObservableObject
         {
             for (var j = 0; j < Columns; j++)
             {
-                writer.Write(Data[i, j]);
+                writer.Write(_data[i, j]);
             }
         }
     }

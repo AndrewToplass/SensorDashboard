@@ -45,13 +45,6 @@ public partial class FileTabViewModel : ViewModelBase
             SensorData.PropertyChanged += SensorData_PropertyChanged;
             ApplyDataGridColumns();
 
-            if (SensorData.Data.Length == 0)
-            {
-                DataGridSource.Items = [];
-                AverageTotal = 0;
-                return;
-            }
-
             DataGridSource.Items = Enumerable.Range(0, SensorData.Rows)
                 .Select(i => SensorData.GetRow(i).ToArray()).ToArray();
             AverageTotal = DataProcessor.Instance.AverageOfDataset(SensorData);

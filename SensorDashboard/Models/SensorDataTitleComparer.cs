@@ -3,6 +3,9 @@ using System.Collections;
 
 namespace SensorDashboard.Models;
 
+/// <summary>
+/// Compare a SensorData to another using its title, or optionally a string.
+/// </summary>
 public class SensorDataTitleComparer : IComparer
 {
     public int Compare(object? a, object? b)
