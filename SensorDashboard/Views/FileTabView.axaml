@@ -4,15 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="using:SensorDashboard.ViewModels"
              xmlns:ui="using:FluentAvalonia.UI.Controls"
-             xmlns:local="using:SensorDashboard"
              xmlns:views="using:SensorDashboard.Views"
+             xmlns:utils="clr-namespace:SensorDashboard.Utils"
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
              x:Class="SensorDashboard.Views.FileTabView"
              x:DataType="vm:FileTabViewModel"
              x:Name="ThisFileTabView">
 
     <UserControl.Resources>
-        <local:DataGridCellColorMultiConverter x:Key="DataGridCellColorMultiConverter" />
+        <utils:DataGridCellColorMultiConverter x:Key="DataGridCellColorMultiConverter" />
     </UserControl.Resources>
 
     <UserControl.Styles>

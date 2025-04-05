@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using SensorDashboard.Utils;
 
 namespace SensorDashboard.Models;
 

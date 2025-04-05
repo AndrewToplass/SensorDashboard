@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace SensorDashboard;
+namespace SensorDashboard.Utils;
 
 public partial class ObservableContainer<T>(T initial = default!) : ObservableObject
 {

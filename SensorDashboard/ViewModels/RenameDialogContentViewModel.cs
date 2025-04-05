@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using SensorDashboard.Models;
+using SensorDashboard.Utils;
 
 namespace SensorDashboard.ViewModels;
 

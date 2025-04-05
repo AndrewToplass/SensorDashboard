@@ -6,7 +6,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data.Converters;
 using Avalonia.Markup.Xaml.MarkupExtensions;
 
-namespace SensorDashboard;
+namespace SensorDashboard.Utils;
 
 public class DataGridCellColorMultiConverter : AvaloniaObject, IMultiValueConverter
 {

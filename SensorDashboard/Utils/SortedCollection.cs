@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
-namespace SensorDashboard;
+namespace SensorDashboard.Utils;
 
 /// <summary>
 /// Like an ObservableCollection&lt;T&gt;, but it is sorted, items are added in
