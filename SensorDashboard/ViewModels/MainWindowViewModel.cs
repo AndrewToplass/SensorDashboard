@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
+using FluentAvalonia.UI.Controls;
+using SensorDashboard.Models;
 
 namespace SensorDashboard.ViewModels;
 
@@ -13,15 +12,26 @@ public partial class MainWindowViewModel : ViewModelBase
 
     [ObservableProperty] private FileTabViewModel? _selectedTab;
 
-    [ObservableProperty] private FileTabViewModel? _tabSearchTarget;
+    [ObservableProperty] private string? _tabSearchTarget;
 
-    public void GotoTab(FileTabViewModel? tab)
+    public void SearchForTab(string? title)
     {
-        if (tab is null)
+        var index = DataProcessor.Instance.Datasets.BinarySearch(title);
+
+        if (index == -1)
         {
+            var dialog = new ContentDialog
+            {
+                Title = "Dataset not found",
+                Content = $"Dataset “{title}” was not found in opened datasets.",
+                CloseButtonText = "OK"
+            };
+            _ = dialog.ShowAsync();
             return;
         }
 
+        TabSearchTarget = string.Empty;
+        var tab = OpenTabs.FirstOrDefault(t => t.SensorData == DataProcessor.Instance.Datasets[index]);
         SelectedTab = tab;
     }
 
@@ -44,11 +54,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         FileTabViewModel tab = new()
         {
-            SensorData = new()
-            {
-                Title = title,
-                HasUnsavedChanges = false
-            }
+            SensorData = DataProcessor.Instance.NewDataset(title)
         };
 
         OpenTabs.Add(tab);

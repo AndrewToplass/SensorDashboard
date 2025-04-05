@@ -8,6 +8,7 @@ using Avalonia.VisualTree;
 using FluentAvalonia.UI.Controls;
 using SensorDashboard.ViewModels;
 using FluentAvalonia.UI.Windowing;
+using SensorDashboard.Models;
 
 namespace SensorDashboard.Views;
 
@@ -70,6 +71,7 @@ public partial class MainWindow : AppWindow
             return false;
         }
 
+        DataProcessor.Instance.CloseDataset(tab.SensorData);
         _viewModel.OpenTabs.Remove(tab);
         return true;
     }

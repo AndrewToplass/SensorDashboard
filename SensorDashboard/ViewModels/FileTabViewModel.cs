@@ -54,7 +54,7 @@ public partial class FileTabViewModel : ViewModelBase
 
             DataGridSource.Items = Enumerable.Range(0, SensorData.Rows)
                 .Select(i => SensorData.GetRow(i).ToArray()).ToArray();
-            AverageTotal = DataProcessor.Instance.Average(SensorData);
+            AverageTotal = DataProcessor.Instance.AverageOfDataset(SensorData);
         }
     }
 
@@ -65,21 +65,21 @@ public partial class FileTabViewModel : ViewModelBase
 
     public void OpenSampleData()
     {
-        SensorData = SensorData.FromTest();
+        SensorData = DataProcessor.Instance.OpenTestDataset();
     }
 
     public async Task OpenFile(IStorageFile file)
     {
         await using var stream = await file.OpenReadAsync();
         var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
-        SensorData = await SensorData.FromStreamAsync(stream, format, file.Name);
+        SensorData = await DataProcessor.Instance.OpenDatasetAsync(stream, format);
     }
 
     public async Task SaveFile(IStorageFile file)
     {
         var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
         await using var stream = await file.OpenWriteAsync();
-        await SensorData.SaveToStreamAsync(stream, format);
+        await DataProcessor.Instance.SaveDatasetAsync(SensorData, stream, format);
     }
 
     private void ApplyDataGridColumns()
@@ -104,7 +104,7 @@ public partial class FileTabViewModel : ViewModelBase
             return;
         }
 
-        AverageRow = DataProcessor.Instance.AverageOfRow(SensorData, selection.SelectedIndex[0]);
+        AverageRow = DataProcessor.Instance.AverageOfDatasetRow(SensorData, selection.SelectedIndex[0]);
     }
 
     private void SensorData_PropertyChanged(object? _, PropertyChangedEventArgs args)
