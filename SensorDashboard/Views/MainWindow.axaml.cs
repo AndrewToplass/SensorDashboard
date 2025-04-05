@@ -15,6 +15,8 @@ public partial class MainWindow : AppWindow
 {
     private MainWindowViewModel _viewModel = null!;
 
+    private bool _closing = false;
+
     public MainWindow()
     {
         InitializeComponent();
@@ -33,11 +35,18 @@ public partial class MainWindow : AppWindow
 
     private async void This_OnClosing(object? sender, WindowClosingEventArgs args)
     {
+        if (_closing)
+        {
+            args.Cancel = true;
+            return;
+        }
+
         if (_viewModel.OpenTabs.Count == 0)
         {
             return;
         }
 
+        _closing = true;
         args.Cancel = true;
 
         Stack<FileTabViewModel> openTabs = new(_viewModel.OpenTabs);
@@ -45,6 +54,7 @@ public partial class MainWindow : AppWindow
         {
             if (!await RequestCloseTab(openTabs.Pop()))
             {
+                _closing = false;
                 break;
             }
         }
