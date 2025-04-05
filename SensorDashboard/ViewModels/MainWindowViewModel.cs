@@ -3,6 +3,7 @@ using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentAvalonia.UI.Controls;
 using SensorDashboard.Models;
+using SensorDashboard.Views;
 
 namespace SensorDashboard.ViewModels;
 
@@ -59,5 +60,20 @@ public partial class MainWindowViewModel : ViewModelBase
 
         OpenTabs.Add(tab);
         SelectedTab = tab;
+    }
+
+    public async void CloseCurrentTab(MainWindow window)
+    {
+        if (SelectedTab is null)
+        {
+            return;
+        }
+
+        _ = await window.RequestCloseTab(SelectedTab);
+    }
+
+    public void CloseWindow(MainWindow window)
+    {
+        window.Close();
     }
 }

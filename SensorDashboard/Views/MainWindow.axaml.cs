@@ -60,9 +60,9 @@ public partial class MainWindow : AppWindow
         }
     }
 
-    private async Task<bool> RequestCloseTab(FileTabViewModel tab)
+    public async Task<bool> RequestCloseTab(FileTabViewModel tab)
     {
-        Tabs.SelectedItem = tab;
+        _viewModel.SelectedTab = tab;
 
         var view = this.FindDescendantOfType<FileTabView>();
 

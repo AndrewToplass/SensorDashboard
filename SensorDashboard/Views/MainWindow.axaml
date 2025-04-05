@@ -19,7 +19,14 @@
     </Design.DataContext>
 
     <win:AppWindow.KeyBindings>
-        <KeyBinding Gesture="{OnPlatform Ctrl+T, macOS=Cmd+T}" Command="{Binding CreateNewTab}" />
+        <KeyBinding Gesture="{OnPlatform Ctrl+T, macOS=Cmd+T}"
+                    Command="{Binding CreateNewTab}" />
+        <KeyBinding Gesture="{OnPlatform Ctrl+W, macOS=Cmd+W}"
+                    Command="{Binding CloseCurrentTab}"
+                    CommandParameter="{Binding #MainWindow1}" />
+        <KeyBinding Gesture="{OnPlatform Ctrl+Shift+W, macOS=Cmd+Shift+W}"
+                    Command="{Binding CloseWindow}"
+                    CommandParameter="{Binding #MainWindow1}" />
     </win:AppWindow.KeyBindings>
 
     <win:AppWindow.Styles>
