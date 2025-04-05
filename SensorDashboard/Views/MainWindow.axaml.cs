@@ -48,7 +48,6 @@ public partial class MainWindow : AppWindow
 
         _closing = true;
         args.Cancel = true;
-
         Stack<FileTabViewModel> openTabs = new(_viewModel.OpenTabs);
         while (openTabs.Count > 0)
         {

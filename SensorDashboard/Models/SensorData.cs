@@ -112,13 +112,13 @@ public partial class SensorData : ObservableObject, IComparable<SensorData>
     /// <param name="format">The file format to read the data in.</param>
     /// <param name="title">Optional title to pass to CSV reading, unused for binary reading.</param>
     /// <returns>A new instance containing the parsed data.</returns>
-    public static async Task<SensorData> FromStream(Stream stream, FileFormat format = FileFormat.Binary,
+    public static async Task<SensorData> FromStreamAsync(Stream stream, FileFormat format = FileFormat.Binary,
         string? title = null)
     {
         return await (format switch
         {
-            FileFormat.Csv => ReadCsvData(stream, title),
-            _ => ReadBinaryData(stream),
+            FileFormat.Csv => ReadCsvDataAsync(stream, title),
+            _ => ReadBinaryDataAsync(stream),
         });
     }
 
@@ -128,7 +128,7 @@ public partial class SensorData : ObservableObject, IComparable<SensorData>
     /// <param name="stream">The stream to read data from.</param>
     /// <returns>A new instance containing the parsed data.</returns>
     /// <exception cref="IOException">If binary file is invalid or other IO error occured.</exception>
-    public static async Task<SensorData> ReadBinaryData(Stream stream)
+    public static async Task<SensorData> ReadBinaryDataAsync(Stream stream)
     {
         return await Task.Run(() =>
         {
@@ -186,7 +186,7 @@ public partial class SensorData : ObservableObject, IComparable<SensorData>
     /// <param name="stream">The stream to read data from.</param>
     /// <param name="title">Title for the dataset to use.</param>
     /// <returns>A new instance containing the parsed data.</returns>
-    public static async Task<SensorData> ReadCsvData(Stream stream, string? title = null)
+    public static async Task<SensorData> ReadCsvDataAsync(Stream stream, string? title = null)
     {
         return await Task.Run(() =>
         {
@@ -257,12 +257,12 @@ public partial class SensorData : ObservableObject, IComparable<SensorData>
     /// </summary>
     /// <param name="stream">The stream to write data to.</param>
     /// <param name="format">The file format to write the data in.</param>
-    public async Task SaveToStream(Stream stream, FileFormat format = FileFormat.Binary)
+    public async Task SaveToStreamAsync(Stream stream, FileFormat format = FileFormat.Binary)
     {
         await (format switch
         {
-            FileFormat.Csv => WriteCsvData(stream),
-            _ => WriteBinaryData(stream),
+            FileFormat.Csv => WriteCsvDataAsync(stream),
+            _ => WriteBinaryDataAsync(stream),
         });
         HasUnsavedChanges = false;
     }
@@ -271,7 +271,7 @@ public partial class SensorData : ObservableObject, IComparable<SensorData>
     /// Write sensor dataset to stream in binary format.
     /// </summary>
     /// <param name="stream">The stream to write data to.</param>
-    public async Task WriteBinaryData(Stream stream)
+    public async Task WriteBinaryDataAsync(Stream stream)
     {
         await using BinaryWriter writer = new(stream, Encoding.UTF8);
 
@@ -313,12 +313,12 @@ public partial class SensorData : ObservableObject, IComparable<SensorData>
     /// Write sensor dataset to stream in CSV format.
     /// </summary>
     /// <param name="stream">The stream to write data to.</param>
-    public async Task WriteCsvData(Stream stream)
+    public async Task WriteCsvDataAsync(Stream stream)
     {
         await using StreamWriter writer = new(stream, Encoding.UTF8);
 
         // Write labels as header row.
-        var headers = Labels?.Select((c, i) => '"' + c.Replace("\"", "\"\"") + '"')
+        var headers = Labels?.Select(c => '"' + c.Replace("\"", "\"\"") + '"')
                       ?? Enumerable.Range(0, Columns).Select(i => $"Column {i}");
 
         await writer.WriteLineAsync(string.Join(", ", headers));

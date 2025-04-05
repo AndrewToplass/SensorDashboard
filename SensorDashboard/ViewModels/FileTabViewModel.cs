@@ -72,14 +72,14 @@ public partial class FileTabViewModel : ViewModelBase
     {
         await using var stream = await file.OpenReadAsync();
         var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
-        SensorData = await SensorData.FromStream(stream, format, file.Name);
+        SensorData = await SensorData.FromStreamAsync(stream, format, file.Name);
     }
 
     public async Task SaveFile(IStorageFile file)
     {
         var format = file.Name.EndsWith(".csv") ? FileFormat.Csv : FileFormat.Binary;
         await using var stream = await file.OpenWriteAsync();
-        await SensorData.SaveToStream(stream, format);
+        await SensorData.SaveToStreamAsync(stream, format);
     }
 
     private void ApplyDataGridColumns()
