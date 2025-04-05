@@ -11,7 +11,7 @@ public partial class DataProcessor : ObservableObject
     {
     }
 
-    [ObservableProperty] private SortedCollection<SensorData> _datasets = [];
+    [ObservableProperty] private SortedCollection<SensorData> _datasets = new(new SensorDataTitleComparer());
 
     public double Average(SensorData data) =>
         Enumerable.Range(0, data.Rows)

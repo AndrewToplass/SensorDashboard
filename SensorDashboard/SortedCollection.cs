@@ -17,10 +17,15 @@ public class SortedCollection<T> : IList<T>, IList, INotifyCollectionChanged, IN
     where T : INotifyPropertyChanged
 {
     private readonly List<T> _items;
-    private readonly Comparer<T> _comparer = Comparer<T>.Default;
+    private readonly IComparer _comparer;
 
-    public SortedCollection()
+    /// <summary>
+    /// Create a SortedCollection, optionally specifying a Comparer to use.
+    /// </summary>
+    /// <param name="comparer">Comparer used to sort items by.</param>
+    public SortedCollection(IComparer? comparer = null)
     {
+        _comparer = comparer ?? Comparer<T>.Default;
         _items = [];
     }
 
@@ -28,17 +33,19 @@ public class SortedCollection<T> : IList<T>, IList, INotifyCollectionChanged, IN
     /// Create a SortedCollection&lt;T&gt; from an IEnumerable&lt;T&gt;.
     /// </summary>
     /// <param name="collection">Existing items to add to collection.</param>
-    public SortedCollection(IEnumerable<T> collection)
+    /// <param name="comparer">Comparer used to sort items by.</param>
+    public SortedCollection(IEnumerable<T> collection, IComparer? comparer = null)
     {
-        _items = collection
+        _comparer = comparer ?? Comparer<T>.Default;
+        var items = collection
             .Select(e =>
             {
                 e.PropertyChanged += Item_PropertyChanged;
                 return e;
             })
-            .ToList();
-
-        _items.Sort(_comparer);
+            .ToArray();
+        Array.Sort(items, _comparer);
+        _items = [..items];
     }
 
     /// <summary>
@@ -155,7 +162,7 @@ public class SortedCollection<T> : IList<T>, IList, INotifyCollectionChanged, IN
     /// </summary>
     /// <param name="item">Item to search for.</param>
     /// <returns>Index of the specified item, or -1 if not found.</returns>
-    public int BinarySearch(T item)
+    public int BinarySearch(object? item)
     {
         var min = 0;
         var max = Count - 1;
@@ -265,7 +272,7 @@ public class SortedCollection<T> : IList<T>, IList, INotifyCollectionChanged, IN
         {
             var comparison = _comparer.Compare(item, this[index]);
 
-            if (comparison >= 0)
+            if (comparison == 0)
             {
                 matches++;
             }
