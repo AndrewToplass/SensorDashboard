@@ -86,19 +86,23 @@ public partial class FileTabView : UserControl
         var file = await DisplayOpenDialog();
         if (file is not null)
         {
-            await _viewModel.OpenFile(file.Path.LocalPath);
+            await _viewModel.OpenFile(file);
         }
     }
 
     private async void SaveFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        if (_viewModel.SensorData.FilePath is not null)
+        var saved = await _viewModel.SaveFile();
+        if (saved)
         {
-            await _viewModel.SaveFile(_viewModel.SensorData.FilePath);
             return;
         }
 
-        SaveFileAsButton_OnClick(sender, e);
+        var file = await DisplaySaveDialog();
+        if (file is not null)
+        {
+            await _viewModel.SaveFile(file);
+        }
     }
 
     private async void SaveFileAsButton_OnClick(object? sender, RoutedEventArgs e)
@@ -106,7 +110,7 @@ public partial class FileTabView : UserControl
         var file = await DisplaySaveDialog();
         if (file is not null)
         {
-            await _viewModel.SaveFile(file.Path.LocalPath);
+            await _viewModel.SaveFile(file);
         }
     }
 
@@ -169,10 +173,10 @@ public partial class FileTabView : UserControl
             return result == ContentDialogResult.Secondary;
         }
 
-        if (_viewModel.SensorData.FilePath is not null)
+        var saved = await _viewModel.SaveFile();
+        if (saved)
         {
             // File already has path associated, dialog not displayed.
-            await _viewModel.SaveFile(_viewModel.SensorData.FilePath);
             return true;
         }
 
@@ -184,7 +188,7 @@ public partial class FileTabView : UserControl
         }
 
         // If user clicked Save, the tab can be closed.
-        await _viewModel.SaveFile(file.Path.LocalPath);
+        await _viewModel.SaveFile(file);
         return true;
     }
 }

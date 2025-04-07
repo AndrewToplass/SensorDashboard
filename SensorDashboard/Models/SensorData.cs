@@ -27,8 +27,6 @@ public partial class SensorData : ObservableObject
     /// </summary>
     [ObservableProperty] private string[]? _labels;
 
-    [ObservableProperty] private string? _filePath;
-
     /// <summary>
     /// The sensor dataset 2D array containing sensor values.
     /// </summary>
@@ -47,7 +45,6 @@ public partial class SensorData : ObservableObject
         switch (args.PropertyName)
         {
             case nameof(HasUnsavedChanges):
-            case nameof(FilePath):
                 break;
 
             default:
@@ -108,17 +105,15 @@ public partial class SensorData : ObservableObject
     /// <summary>
     /// Read sensor dataset from a file path.
     /// </summary>
-    /// <param name="filePath">The file path to open and read data from.</param>
+    /// <param name="stream">The file path to open and read data from.</param>
+    /// <param name="fileName">The name of the file, only used for CSV.</param>
     /// <returns>A new instance containing the parsed data.</returns>
-    public static async Task<SensorData> FromFileAsync(string filePath)
+    public static async Task<SensorData> FromFileAsync(Stream stream, string? fileName = null)
     {
-        await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-
-        var sensorData = filePath.EndsWith(".csv")
-            ? await ReadCsvDataAsync(stream, Path.GetFileNameWithoutExtension(filePath))
+        var sensorData = fileName?.EndsWith(".csv") ?? false
+            ? await ReadCsvDataAsync(stream, Path.GetFileNameWithoutExtension(fileName))
             : await ReadBinaryDataAsync(stream);
 
-        sensorData.FilePath = filePath;
         return sensorData;
     }
 
@@ -255,12 +250,11 @@ public partial class SensorData : ObservableObject
     /// Save data from current instance to the specified stream, either in
     /// Binary or CSV format.
     /// </summary>
-    /// <param name="filePath">The file path to write data to.</param>
-    public async Task SaveToFileAsync(string filePath)
+    /// <param name="stream">The stream to write data to.</param>
+    /// <param name="fileName">The name of the file, only used for CSV.</param>
+    public async Task SaveToFileAsync(Stream stream, string? fileName = null)
     {
-        await using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write);
-
-        if (filePath.EndsWith(".csv"))
+        if (fileName?.EndsWith(".csv") ?? false)
         {
             await WriteCsvDataAsync(stream);
         }
@@ -270,7 +264,6 @@ public partial class SensorData : ObservableObject
         }
 
         HasUnsavedChanges = false;
-        FilePath = filePath;
     }
 
     /// <summary>

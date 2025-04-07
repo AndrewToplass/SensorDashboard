@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Selection;
+using Avalonia.Platform.Storage;
 
 namespace SensorDashboard.ViewModels;
 
@@ -30,6 +31,8 @@ public partial class FileTabViewModel : ViewModelBase
     [ObservableProperty] private double _averageTotal;
 
     [ObservableProperty] private double? _averageRow;
+
+    [ObservableProperty] private IStorageFile? _file;
 
     // Set by required property SensorData.
     private SensorData _sensorData = new() { Title = "" };
@@ -60,14 +63,30 @@ public partial class FileTabViewModel : ViewModelBase
         SensorData = DataProcessor.Instance.OpenTestDataset();
     }
 
-    public async Task OpenFile(string filePath)
+    public async Task OpenFile(IStorageFile file)
     {
-        SensorData = await DataProcessor.Instance.OpenDatasetAsync(filePath);
+        File = file;
+        await using var stream = await file.OpenReadAsync();
+        SensorData = await DataProcessor.Instance.OpenDatasetAsync(stream, file.Name);
     }
 
-    public async Task SaveFile(string filePath)
+    public async Task<bool> SaveFile()
     {
-        await DataProcessor.Instance.SaveDatasetAsync(SensorData, filePath);
+        if (File is null)
+        {
+            return false;
+        }
+
+        await using var stream = await File.OpenWriteAsync();
+        await DataProcessor.Instance.SaveDatasetAsync(SensorData, stream, File.Name);
+
+        return true;
+    }
+
+    public async Task SaveFile(IStorageFile file)
+    {
+        File = file;
+        await SaveFile();
     }
 
     private void ApplyDataGridColumns()
