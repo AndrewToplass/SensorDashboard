@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.ThemeDictionaries>
 
+        <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
+
         <ResourceDictionary x:Key="Dark">
             <StaticResource x:Key="DataGridCellFocusVisualPrimaryBrush" ResourceKey="FocusStrokeColorOuter" />
             <StaticResource x:Key="DataGridCellFocusVisualSecondaryBrush" ResourceKey="FocusStrokeColorInner" />
@@ -47,5 +49,8 @@
             <StaticResource x:Key="DataGridRowGroupHeaderPressedBackgroundBrush" ResourceKey="SubtleFillColorTertiaryBrush" />
             <StaticResource x:Key="DataGridRowHoveredBackgroundColor" ResourceKey="SubtleFillColorSecondaryBrush" />
         </ResourceDictionary>
+
+        <!-- ReSharper restore Xaml.StaticResourceNotResolved -->
+
     </ResourceDictionary.ThemeDictionaries>
 </ResourceDictionary>
