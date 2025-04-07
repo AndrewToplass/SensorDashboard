@@ -81,36 +81,71 @@ public partial class FileTabView : UserControl
         return file;
     }
 
+    private async void ShowErrorMessage(Exception exception, string? action = null)
+    {
+        var dialog = new ContentDialog
+        {
+            Title = action is null ? "Error" : $"Error in {action}",
+            Content = new ErrorDialogContentViewModel(exception),
+            CloseButtonText = "Close",
+            DefaultButton = ContentDialogButton.Close
+        };
+        await dialog.ShowAsync();
+    }
+
     private async void OpenFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var file = await DisplayOpenDialog();
-        if (file is not null)
+        var previousFile = _viewModel.File;
+        try
         {
-            await _viewModel.OpenFile(file);
+            var file = await DisplayOpenDialog();
+            if (file is not null)
+            {
+                await _viewModel.OpenFile(file);
+            }
+        }
+        catch (Exception ex)
+        {
+            _viewModel.File = previousFile;
+            ShowErrorMessage(ex, "opening file");
         }
     }
 
     private async void SaveFileButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var saved = await _viewModel.SaveFile();
-        if (saved)
+        try
         {
-            return;
-        }
+            var saved = await _viewModel.SaveFile();
+            if (saved)
+            {
+                return;
+            }
 
-        var file = await DisplaySaveDialog();
-        if (file is not null)
+            var file = await DisplaySaveDialog();
+            if (file is not null)
+            {
+                await _viewModel.SaveFile(file);
+            }
+        }
+        catch (Exception ex)
         {
-            await _viewModel.SaveFile(file);
+            ShowErrorMessage(ex, "saving file");
         }
     }
 
     private async void SaveFileAsButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        var file = await DisplaySaveDialog();
-        if (file is not null)
+        try
         {
-            await _viewModel.SaveFile(file);
+            var file = await DisplaySaveDialog();
+            if (file is not null)
+            {
+                await _viewModel.SaveFile(file);
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage(ex, "saving file");
         }
     }
 
@@ -173,22 +208,30 @@ public partial class FileTabView : UserControl
             return result == ContentDialogResult.Secondary;
         }
 
-        var saved = await _viewModel.SaveFile();
-        if (saved)
+        try
         {
-            // File already has path associated, dialog not displayed.
+            var saved = await _viewModel.SaveFile();
+            if (saved)
+            {
+                // File already has path associated, dialog not displayed.
+                return true;
+            }
+
+            var file = await DisplaySaveDialog();
+            if (file is null)
+            {
+                // If user cancelled save from save dialog, tab cannot be closed.
+                return false;
+            }
+
+            // If user clicked Save, the tab can be closed.
+            await _viewModel.SaveFile(file);
             return true;
         }
-
-        var file = await DisplaySaveDialog();
-        if (file is null)
+        catch (Exception ex)
         {
-            // If user cancelled save from save dialog, tab cannot be closed.
+            ShowErrorMessage(ex, "saving file");
             return false;
         }
-
-        // If user clicked Save, the tab can be closed.
-        await _viewModel.SaveFile(file);
-        return true;
     }
 }

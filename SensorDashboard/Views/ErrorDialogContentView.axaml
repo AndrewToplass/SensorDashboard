@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:SensorDashboard.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:Class="SensorDashboard.Views.ErrorDialogContentView"
+             x:DataType="vm:ErrorDialogContentViewModel">
+
+    <StackPanel>
+
+        <TextBlock Text="{Binding Exception.Message, FallbackValue='An error occured.'}"
+                   Margin="0 0 0 20" />
+
+        <Expander Header="Additional information">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto">
+                <TextBlock Text="{Binding Exception.StackTrace, FallbackValue='none'}" />
+            </ScrollViewer>
+        </Expander>
+
+    </StackPanel>
+
+</UserControl>
