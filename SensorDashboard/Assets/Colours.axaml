@@ -4,14 +4,15 @@
     <ResourceDictionary.ThemeDictionaries>
 
         <ResourceDictionary x:Key="Default">
-            <BoxShadows x:Key="DataGridShadow">0 0.5 3 #40000000</BoxShadows>
+            <BoxShadows x:Key="DataGridShadow">0 0.5 3 #30000000</BoxShadows>
+            <SolidColorBrush x:Key="DataGridBackgroundShadeBrush" Color="#30ffffff" />
 
             <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
                              Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
 
-            <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#60ff4040" />
-            <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#602080ff" />
-            <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#6010e040" />
+            <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#50ff4040" />
+            <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#502080ff" />
+            <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#5010e040" />
             <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="Black" />
 
             <SolidColorBrush x:Key="WindowControlsForegroundBrush" Color="#000000" />
@@ -24,14 +25,15 @@
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Dark">
-            <BoxShadows x:Key="DataGridShadow">0 0.5 3 #80000000</BoxShadows>
+            <BoxShadows x:Key="DataGridShadow">0 0.5 3 #40000000</BoxShadows>
+            <SolidColorBrush x:Key="DataGridBackgroundShadeBrush" Color="#40000000" />
 
             <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
                              Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
 
-            <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#40ff4040" />
-            <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#402080ff" />
-            <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#4010e040" />
+            <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush" Color="#30ff4040" />
+            <SolidColorBrush x:Key="DataGridCellLowBackgroundBrush" Color="#302080ff" />
+            <SolidColorBrush x:Key="DataGridCellGoodBackgroundBrush" Color="#3010e040" />
             <SolidColorBrush x:Key="DataGridCellForegroundBrush" Color="White" />
 
             <SolidColorBrush x:Key="WindowControlsForegroundBrush" Color="#ffffff" />

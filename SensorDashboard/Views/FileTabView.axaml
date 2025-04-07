@@ -9,7 +9,7 @@
              mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
              x:Class="SensorDashboard.Views.FileTabView"
              x:DataType="vm:FileTabViewModel"
-             x:Name="ThisFileTabView">
+             x:Name="View">
 
     <UserControl.Resources>
         <utils:DataGridCellColorMultiConverter x:Key="DataGridCellColorMultiConverter" />
@@ -17,11 +17,30 @@
 
     <UserControl.Styles>
 
-        <Style Selector="StackPanel > :is(Control)">
-            <Setter Property="Margin" Value="8 4 8 8" />
+        <Style Selector="UniformGrid">
+            <Setter Property="Columns" Value="1" />
+            <Setter Property="DockPanel.Dock" Value="Left" />
+            <Setter Property="Margin" Value="0 0 4 0" />
+            <Setter Property="Interaction.Behaviors">
+                <BehaviorCollection>
+                    <AdaptiveBehavior SourceControl="{Binding #View}">
+                        <AdaptiveClassSetter MinWidth="0" MaxWidth="500" ClassName="narrow" />
+                    </AdaptiveBehavior>
+                </BehaviorCollection>
+            </Setter>
 
-            <Style Selector="^Label">
-                <Setter Property="Margin" Value="8 0" />
+            <Style Selector="^.narrow">
+                <Setter Property="Columns" Value="2" />
+                <Setter Property="DockPanel.Dock" Value="Bottom" />
+                <Setter Property="Margin" Value="0 4 0 0" />
+            </Style>
+
+            <Style Selector="^ > StackPanel">
+                <Setter Property="Margin" Value="8 0 8 8" />
+            </Style>
+
+            <Style Selector="^ Label">
+                <Setter Property="Margin" Value="0 4" />
             </Style>
         </Style>
 
@@ -57,26 +76,15 @@
                 </MultiBinding>
             </Setter>
             <Setter Property="Foreground" Value="{DynamicResource DataGridCellForegroundBrush}" />
-            <Style Selector="^ TextBlock">
-                <Setter Property="TextAlignment" Value="Center" />
-            </Style>
         </Style>
 
     </UserControl.Styles>
 
-    <Grid RowDefinitions="Auto, *"
-          Margin="8">
+    <DockPanel Margin="4">
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="2*" MinWidth="150" MaxWidth="250" />
-            <ColumnDefinition Width="3*" />
-        </Grid.ColumnDefinitions>
-
-        <ui:CommandBar Grid.Column="0"
-                       Grid.Row="0"
-                       Grid.ColumnSpan="2"
+        <ui:CommandBar DockPanel.Dock="Top"
                        DefaultLabelPosition="Right"
-                       Margin="0 0 0 8">
+                       Margin="0 0 0 4">
 
             <ui:CommandBar.PrimaryCommands>
 
@@ -117,62 +125,68 @@
 
         </ui:CommandBar>
 
-        <StackPanel Grid.Column="0"
-                    Grid.Row="1"
-                    VerticalAlignment="Top"
-                    Margin="0 8 0 0">
+        <UniformGrid VerticalAlignment="Top"
+                     MinWidth="200">
 
-            <Label Content="Total average:" />
-            <NumericUpDown IsReadOnly="True"
-                           FormatString="0.00"
-                           ShowButtonSpinner="False"
-                           Focusable="False"
-                           Value="{Binding AverageTotal}" />
+            <StackPanel>
+                <Label Content="Total average:" />
+                <NumericUpDown IsReadOnly="True"
+                               FormatString="0.00"
+                               ShowButtonSpinner="False"
+                               Focusable="False"
+                               Value="{Binding AverageTotal}" />
+            </StackPanel>
 
-            <Label Content="Row average:" />
-            <NumericUpDown IsReadOnly="True"
-                           FormatString="0.00"
-                           ShowButtonSpinner="False"
-                           Focusable="False"
-                           Value="{Binding AverageRow, TargetNullValue=0}" />
+            <StackPanel>
+                <Label Content="Row average:" />
+                <NumericUpDown IsReadOnly="True"
+                               FormatString="0.00"
+                               ShowButtonSpinner="False"
+                               Focusable="False"
+                               Value="{Binding AverageRow, TargetNullValue=0}" />
+            </StackPanel>
 
-            <Label Content="Threshold min:" />
-            <ui:NumberBox AcceptsExpression="True"
-                          HorizontalAlignment="Stretch"
-                          SpinButtonPlacementMode="Inline"
-                          SimpleNumberFormat="0.00"
-                          Value="{Binding ThresholdMinimum}"
-                          Maximum="{Binding ThresholdMaximum}" />
+            <StackPanel>
+                <Label Content="Threshold min:" />
+                <ui:NumberBox AcceptsExpression="True"
+                              HorizontalAlignment="Stretch"
+                              SpinButtonPlacementMode="Inline"
+                              SimpleNumberFormat="0.00"
+                              Value="{Binding ThresholdMinimum}"
+                              Maximum="{Binding ThresholdMaximum}" />
+            </StackPanel>
 
-            <Label Content="Threshold max:" />
-            <ui:NumberBox AcceptsExpression="True"
-                          HorizontalAlignment="Stretch"
-                          SpinButtonPlacementMode="Inline"
-                          SimpleNumberFormat="0.00"
-                          Value="{Binding ThresholdMaximum}"
-                          Minimum="{Binding ThresholdMinimum} " />
-        </StackPanel>
+            <StackPanel>
+                <Label Content="Threshold max:" />
+                <ui:NumberBox AcceptsExpression="True"
+                              HorizontalAlignment="Stretch"
+                              SpinButtonPlacementMode="Inline"
+                              SimpleNumberFormat="0.00"
+                              Value="{Binding ThresholdMaximum}"
+                              Minimum="{Binding ThresholdMinimum} " />
+            </StackPanel>
 
-        <Border Grid.Row="1"
-                Grid.Column="1"
-                CornerRadius="8"
+        </UniformGrid>
+
+        <Border CornerRadius="8"
                 VerticalAlignment="Stretch"
                 HorizontalAlignment="Stretch"
-                Margin="8 0 -3 -3"
                 BoxShadow="{DynamicResource DataGridShadow}">
 
             <Border CornerRadius="{Binding $parent.CornerRadius}"
                     ClipToBounds="True"
                     VerticalAlignment="Stretch"
-                    HorizontalAlignment="Stretch">
+                    HorizontalAlignment="Stretch"
+                    Background="{DynamicResource DataGridBackgroundShadeBrush}">
 
                 <TreeDataGrid x:Name="DataGridDisplay"
                               Source="{Binding DataGridSource}"
                               CanUserResizeColumns="False"
                               CanUserSortColumns="False"
-                              VerticalAlignment="Top" />
+                              VerticalAlignment="Top"
+                              IsVisible="{Binding DataGridSource.Columns.Count}" />
             </Border>
         </Border>
 
-    </Grid>
+    </DockPanel>
 </UserControl>
