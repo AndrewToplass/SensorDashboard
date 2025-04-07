@@ -1,110 +1,29 @@
 <win:AppWindow xmlns="https://github.com/avaloniaui"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-               xmlns:vm="using:SensorDashboard.ViewModels"
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-               xmlns:ui="using:FluentAvalonia.UI.Controls"
+               xmlns:views="using:SensorDashboard.Views"
                xmlns:win="using:FluentAvalonia.UI.Windowing"
+               xmlns:vm="using:SensorDashboard.ViewModels"
                mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
                x:Class="SensorDashboard.Views.MainWindow"
-               x:DataType="vm:MainWindowViewModel"
                Icon="/Assets/avalonia-logo.ico"
                Title="SensorDashboard"
                TransparencyLevelHint="Mica"
-               x:Name="MainWindow1">
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
+               x:Name="Window"
+               x:DataType="vm:MainViewModel">
 
     <win:AppWindow.KeyBindings>
         <KeyBinding Gesture="{OnPlatform Ctrl+T, macOS=Cmd+T}"
                     Command="{Binding CreateNewTab}" />
         <KeyBinding Gesture="{OnPlatform Ctrl+W, macOS=Cmd+W}"
                     Command="{Binding CloseCurrentTab}"
-                    CommandParameter="{Binding #MainWindow1}" />
+                    CommandParameter="{Binding #MainView}" />
         <KeyBinding Gesture="{OnPlatform Ctrl+Shift+W, macOS=Cmd+Shift+W}"
                     Command="{Binding CloseWindow}"
-                    CommandParameter="{Binding #MainWindow1}" />
+                    CommandParameter="{Binding #Window}" />
     </win:AppWindow.KeyBindings>
 
-    <win:AppWindow.Styles>
-        <Style Selector=":is(Window)[ActualTransparencyLevel=Mica][IsActive=true]">
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-    </win:AppWindow.Styles>
-
-    <Grid RowDefinitions="Auto,*">
-
-        <ui:TabView Grid.Row="1"
-                    x:Name="Tabs"
-                    AddTabButtonCommand="{Binding CreateNewTab}"
-                    TabItems="{Binding OpenTabs}"
-                    TabCloseRequested="Tabs_OnTabCloseRequested"
-                    SelectedItem="{Binding SelectedTab}"
-                    VerticalAlignment="Stretch">
-
-            <ui:TabView.Styles>
-                <Style Selector="ui|TabViewItem Button">
-                    <Setter Property="FontStyle" Value="Normal" />
-                </Style>
-
-                <Style Selector="ui|TabViewItem.Unsaved">
-                    <Setter Property="FontStyle" Value="Italic" />
-                </Style>
-            </ui:TabView.Styles>
-
-            <ui:TabView.TabItemTemplate>
-                <DataTemplate DataType="vm:FileTabViewModel">
-                    <ui:TabViewItem Header="{Binding SensorData.Title}"
-                                    IconSource="Document"
-                                    Content="{Binding}"
-                                    Classes.Unsaved="{Binding SensorData.HasUnsavedChanges}" />
-                </DataTemplate>
-            </ui:TabView.TabItemTemplate>
-
-            <ui:TabView.TabStripFooter>
-                <Grid>
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="15*" MaxWidth="300" MinWidth="150" />
-                    </Grid.ColumnDefinitions>
-
-                    <TextBox Grid.Column="1"
-                             x:Name="TabSearchBar"
-                             Watermark="Search open datasets…"
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Stretch"
-                             Margin="8 0"
-                             Text="{Binding TabSearchTarget}">
-
-                        <TextBox.KeyBindings>
-                            <KeyBinding Gesture="Enter"
-                                        Command="{Binding SearchForTab}"
-                                        CommandParameter="{Binding #TabSearchBar.Text}" />
-                        </TextBox.KeyBindings>
-
-                        <TextBox.InnerRightContent>
-                            <Button VerticalAlignment="Stretch"
-                                    Padding="8 0"
-                                    Margin="4"
-                                    Command="{Binding SearchForTab}"
-                                    CommandParameter="{Binding #TabSearchBar.Text}"
-                                    Theme="{DynamicResource TransparentButton}">
-
-                                <ui:SymbolIcon Symbol="Find"
-                                               FontSize="18" />
-                            </Button>
-                        </TextBox.InnerRightContent>
-                    </TextBox>
-
-                </Grid>
-            </ui:TabView.TabStripFooter>
-
-        </ui:TabView>
-
-    </Grid>
+    <views:MainView x:Name="MainView" />
 
 </win:AppWindow>

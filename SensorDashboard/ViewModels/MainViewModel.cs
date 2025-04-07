@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using FluentAvalonia.UI.Controls;
 using SensorDashboard.Models;
@@ -7,24 +9,24 @@ using SensorDashboard.Views;
 
 namespace SensorDashboard.ViewModels;
 
-public partial class MainWindowViewModel : ViewModelBase
+public partial class MainViewModel : ViewModelBase
 {
     public ObservableCollection<FileTabViewModel> OpenTabs { get; set; } = [];
 
     [ObservableProperty] private FileTabViewModel? _selectedTab;
 
-    [ObservableProperty] private string? _tabSearchTarget;
+    [ObservableProperty] private string _tabSearchTarget = string.Empty;
 
-    public void SearchForTab(string? title)
+    public void SearchForTab()
     {
-        var index = DataProcessor.Instance.Datasets.BinarySearch(title);
+        var index = DataProcessor.Instance.Datasets.BinarySearch(TabSearchTarget);
 
         if (index == -1)
         {
             var dialog = new ContentDialog
             {
                 Title = "Dataset not found",
-                Content = $"Dataset “{title}” was not found in opened datasets.",
+                Content = $"Dataset “{TabSearchTarget}” was not found in opened datasets.",
                 CloseButtonText = "OK"
             };
             _ = dialog.ShowAsync();
@@ -62,17 +64,17 @@ public partial class MainWindowViewModel : ViewModelBase
         SelectedTab = tab;
     }
 
-    public async void CloseCurrentTab(MainWindow window)
+    public async void CloseCurrentTab(MainView view)
     {
         if (SelectedTab is null)
         {
             return;
         }
 
-        _ = await window.RequestCloseTab(SelectedTab);
+        _ = await view.RequestCloseTab(SelectedTab);
     }
 
-    public void CloseWindow(MainWindow window)
+    public void CloseWindow(Window window)
     {
         window.Close();
     }
