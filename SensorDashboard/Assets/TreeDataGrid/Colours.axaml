@@ -5,49 +5,25 @@
         <!-- ReSharper disable Xaml.StaticResourceNotResolved -->
 
         <ResourceDictionary x:Key="Dark">
-            <StaticResource x:Key="DataGridCellFocusVisualPrimaryBrush" ResourceKey="FocusStrokeColorOuter" />
-            <StaticResource x:Key="DataGridCellFocusVisualSecondaryBrush" ResourceKey="FocusStrokeColorInner" />
-            <StaticResource x:Key="DataGridCellInvalidBrush" ResourceKey="SystemFillColorCriticalBrush" />
-            <StaticResource x:Key="DataGridGridLinesBrush" ResourceKey="DividerStrokeColorDefaultBrush" />
-            <StaticResource x:Key="DataGridColumnHeaderForegroundBrush" ResourceKey="TextFillColorSecondaryBrush" />
-            <StaticResource x:Key="DataGridColumnHeaderBackgroundBrush" ResourceKey="ControlFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridColumnHeaderHoveredBackgroundBrush" ResourceKey="ControlFillColorSecondaryBrush" />
-            <StaticResource x:Key="DataGridColumnHeaderPressedBackgroundBrush" ResourceKey="ControlFillColorTertiaryBrush" />
-            <StaticResource x:Key="DataGridDetailsPresenterBackgroundBrush" ResourceKey="SolidBackgroundFillColorBase" />
-            <StaticResource x:Key="DataGridColumnHeaderDraggedBackgroundBrush" ResourceKey="SolidBackgroundFillColorBase" />
-            <StaticResource x:Key="DataGridRowInvalidBrush" ResourceKey="SystemFillColorCriticalBackgroundBrush" />
-            <StaticResource x:Key="DataGridRowSelectedUnfocusedBackgroundBrush" ResourceKey="AccentFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundBrush" ResourceKey="AccentFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridRowSelectedBackgroundBrush" ResourceKey="AccentFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridRowSelectedHoveredBackgroundBrush" ResourceKey="AccentFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridRowGroupHeaderForegroundBrush" ResourceKey="TextFillColorSecondaryBrush" />
-            <StaticResource x:Key="DataGridRowGroupHeaderBackgroundBrush" ResourceKey="SolidBackgroundFillColorBaseBrush" />
-            <StaticResource x:Key="DataGridRowGroupHeaderHoveredBackgroundBrush" ResourceKey="SubtleFillColorSecondaryBrush" />
-            <StaticResource x:Key="DataGridRowGroupHeaderPressedBackgroundBrush" ResourceKey="SubtleFillColorTertiaryBrush" />
-            <StaticResource x:Key="DataGridRowHoveredBackgroundColor" ResourceKey="SubtleFillColorSecondaryBrush" />
+            <StaticResource x:Key="TreeDataGridGridLinesBrush" ResourceKey="DividerStrokeColorDefaultBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderBackgroundPointerOverBrush" ResourceKey="SubtleFillColorSecondaryBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderBackgroundPressedBrush" ResourceKey="SubtleFillColorTertiaryBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderBorderBrushPointerOverBrush" ResourceKey="DividerStrokeColorDefaultBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderBorderBrushPressedBrush" ResourceKey="DividerStrokeColorDefaultBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderForegroundPointerOverBrush" ResourceKey="TextFillColorSecondaryBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderForegroundPressedBrush" ResourceKey="TextFillColorSecondaryBrush" />
+            <SolidColorBrush x:Key="TreeDataGridSelectedCellBackgroundBrush" Color="{DynamicResource SystemAccentColorLight2}" Opacity="0.3" />
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Default">
-            <StaticResource x:Key="DataGridCellFocusVisualPrimaryBrush" ResourceKey="FocusStrokeColorOuter" />
-            <StaticResource x:Key="DataGridCellFocusVisualSecondaryBrush" ResourceKey="FocusStrokeColorInner" />
-            <StaticResource x:Key="DataGridCellInvalidBrush" ResourceKey="SystemFillColorCriticalBrush" />
-            <StaticResource x:Key="DataGridGridLinesBrush" ResourceKey="DividerStrokeColorDefaultBrush" />
-            <StaticResource x:Key="DataGridColumnHeaderForegroundBrush" ResourceKey="TextFillColorSecondaryBrush" />
-            <StaticResource x:Key="DataGridColumnHeaderBackgroundBrush" ResourceKey="ControlFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridColumnHeaderHoveredBackgroundBrush" ResourceKey="ControlFillColorSecondaryBrush" />
-            <StaticResource x:Key="DataGridColumnHeaderPressedBackgroundBrush" ResourceKey="ControlFillColorTertiaryBrush" />
-            <StaticResource x:Key="DataGridDetailsPresenterBackgroundBrush" ResourceKey="SolidBackgroundFillColorBase" />
-            <StaticResource x:Key="DataGridColumnHeaderDraggedBackgroundBrush" ResourceKey="SolidBackgroundFillColorBase" />
-            <StaticResource x:Key="DataGridRowInvalidBrush" ResourceKey="SystemFillColorCriticalBackgroundBrush" />
-            <StaticResource x:Key="DataGridRowSelectedUnfocusedBackgroundBrush" ResourceKey="AccentFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridRowSelectedHoveredUnfocusedBackgroundBrush" ResourceKey="AccentFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridRowSelectedBackgroundBrush" ResourceKey="AccentFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridRowSelectedHoveredBackgroundBrush" ResourceKey="AccentFillColorDefaultBrush" />
-            <StaticResource x:Key="DataGridRowGroupHeaderForegroundBrush" ResourceKey="TextFillColorSecondaryBrush" />
-            <StaticResource x:Key="DataGridRowGroupHeaderBackgroundBrush" ResourceKey="SolidBackgroundFillColorBaseBrush" />
-            <StaticResource x:Key="DataGridRowGroupHeaderHoveredBackgroundBrush" ResourceKey="SubtleFillColorSecondaryBrush" />
-            <StaticResource x:Key="DataGridRowGroupHeaderPressedBackgroundBrush" ResourceKey="SubtleFillColorTertiaryBrush" />
-            <StaticResource x:Key="DataGridRowHoveredBackgroundColor" ResourceKey="SubtleFillColorSecondaryBrush" />
+            <StaticResource x:Key="TreeDataGridGridLinesBrush" ResourceKey="DividerStrokeColorDefaultBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderBackgroundPointerOverBrush" ResourceKey="SubtleFillColorSecondaryBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderBackgroundPressedBrush" ResourceKey="SubtleFillColorTertiaryBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderBorderBrushPointerOverBrush" ResourceKey="DividerStrokeColorDefaultBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderBorderBrushPressedBrush" ResourceKey="DividerStrokeColorDefaultBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderForegroundPointerOverBrush" ResourceKey="TextFillColorSecondaryBrush" />
+            <StaticResource x:Key="TreeDataGridHeaderForegroundPressedBrush" ResourceKey="TextFillColorSecondaryBrush" />
+            <SolidColorBrush x:Key="TreeDataGridSelectedCellBackgroundBrush" Color="{DynamicResource SystemAccentColorDark1}" Opacity="0.3" />
         </ResourceDictionary>
 
         <!-- ReSharper restore Xaml.StaticResourceNotResolved -->

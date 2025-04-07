@@ -11,7 +11,9 @@
 
     <Application.Styles>
         <sty:FluentAvaloniaTheme PreferUserAccentColor="True" />
-        <StyleInclude Source="avares://Avalonia.Controls.TreeDataGrid/Themes/Fluent.axaml" />
+
+        <!-- TreeDataGrid styles. -->
+        <StyleInclude Source="avares://Avalonia.Controls.TreeDataGrid/Themes/Generic.axaml" />
 
         <!-- Include custom app styles. -->
         <StyleInclude Source="/Assets/Styles.axaml" />
@@ -25,8 +27,6 @@
                 <!-- Include custom app resources. -->
                 <MergeResourceInclude Source="/Assets/Colours.axaml" />
                 <MergeResourceInclude Source="/Assets/TreeDataGrid/Colours.axaml" />
-                <!-- Not using these resources, but the TreeDataGrid depends on them. -->
-                <MergeResourceInclude Source="/Assets/TreeDataGrid/SystemBase.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
