@@ -36,6 +36,7 @@ public partial class MainView : UserControl
 
     public async Task<bool> RequestCloseTab(FileTabViewModel tab)
     {
+        var oldTab = ViewModel.SelectedTab;
         ViewModel.SelectedTab = tab;
 
         var view = this.FindDescendantOfType<FileTabView>();
@@ -45,8 +46,23 @@ public partial class MainView : UserControl
             return false;
         }
 
+        var index = ViewModel.OpenTabs.IndexOf(tab);
         DataProcessor.Instance.CloseDataset(tab.SensorData);
         ViewModel.OpenTabs.Remove(tab);
+
+        if (oldTab != tab)
+        {
+            ViewModel.SelectedTab = oldTab;
+        }
+        else
+        {
+            var newTab = index < ViewModel.OpenTabs.Count
+                ? ViewModel.OpenTabs[index]
+                : null;
+            ViewModel.SelectedTab = null;
+            ViewModel.SelectedTab = newTab;
+        }
+
         return true;
     }
 
