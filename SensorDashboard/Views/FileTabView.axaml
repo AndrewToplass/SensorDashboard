@@ -68,9 +68,9 @@
                              RelativeSource="{RelativeSource AncestorType=views:FileTabView}"
                              FallbackValue="100" />
                     <Binding Path="$self.Value" />
-                    <!-- Pass self into multi-converter so dynamic resource
-                         background can be applied. -->
-                    <Binding Path="$self" />
+                    <!-- Get the current theme and update when theme changes. -->
+                    <Binding Source="{x:Static Application.Current}"
+                             Path="ActualThemeVariant" />
                 </MultiBinding>
             </Setter>
             <Setter Property="Foreground" Value="{DynamicResource DataGridCellForegroundBrush}" />

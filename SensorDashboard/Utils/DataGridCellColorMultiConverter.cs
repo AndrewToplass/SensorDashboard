@@ -2,40 +2,41 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Avalonia;
-using Avalonia.Controls.Primitives;
+using Avalonia.Controls;
 using Avalonia.Data.Converters;
-using Avalonia.Markup.Xaml.MarkupExtensions;
+using Avalonia.Media;
+using Avalonia.Styling;
 
 namespace SensorDashboard.Utils;
 
 public class DataGridCellColorMultiConverter : AvaloniaObject, IMultiValueConverter
 {
-    public object Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
+    public object? Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
     {
-        if (values.Count < 3)
-        {
-            return AvaloniaProperty.UnsetValue;
-        }
-
-        if (values[0] is not double min ||
+        if (values.Count < 4 ||
+            values[0] is not double min ||
             values[1] is not double max ||
             values[2] is not string content ||
-            values[3] is not TreeDataGridCell cell)
+            values[3] is not ThemeVariant theme)
         {
-            return AvaloniaProperty.UnsetValue;
+            return Brushes.Transparent;
         }
 
         if (double.TryParse(content, out var result))
         {
-            // Apply dynamic resource that can adapt to theme changes.
-            cell[!TemplatedControl.BackgroundProperty] = result switch
+            var key = result switch
             {
-                _ when result > max => new DynamicResourceExtension("DataGridCellHighBackgroundBrush"),
-                _ when result < min => new DynamicResourceExtension("DataGridCellLowBackgroundBrush"),
-                _ => new DynamicResourceExtension("DataGridCellGoodBackgroundBrush")
+                _ when result > max => "DataGridCellHighBackgroundBrush",
+                _ when result < min => "DataGridCellLowBackgroundBrush",
+                _ => "DataGridCellGoodBackgroundBrush"
             };
+
+            if (Application.Current?.TryFindResource(key, theme, out var value) ?? false)
+            {
+                return value;
+            }
         }
 
-        return AvaloniaProperty.UnsetValue;
+        return Brushes.Transparent;
     }
 }
