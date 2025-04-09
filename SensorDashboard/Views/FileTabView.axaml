@@ -17,17 +17,10 @@
 
     <UserControl.Styles>
 
-        <Style Selector="utils|AdaptiveGrid">
+        <Style Selector="DockPanel > utils|AdaptiveGrid">
             <Setter Property="ColumnDefinitions" Value="*" />
             <Setter Property="DockPanel.Dock" Value="Left" />
             <Setter Property="Margin" Value="0 0 4 0" />
-            <Setter Property="Interaction.Behaviors">
-                <BehaviorCollection>
-                    <AdaptiveBehavior SourceControl="{Binding #View}">
-                        <AdaptiveClassSetter MinWidth="0" MaxWidth="500" ClassName="narrow" />
-                    </AdaptiveBehavior>
-                </BehaviorCollection>
-            </Setter>
 
             <Style Selector="^.narrow">
                 <Setter Property="ColumnDefinitions" Value="*, *" />
@@ -35,7 +28,7 @@
                 <Setter Property="Margin" Value="0 4 0 0" />
             </Style>
 
-            <Style Selector="^ > StackPanel">
+            <Style Selector="^ > StackPanel, ^ > :is(Grid)">
                 <Setter Property="Margin" Value="8 0 8 8" />
             </Style>
 
@@ -43,7 +36,7 @@
                 <Setter Property="VerticalAlignment" Value="Center" />
             </Style>
 
-            <Style Selector="^ Label">
+            <Style Selector="^ Label, ^ CheckBox">
                 <Setter Property="Margin" Value="0 4" />
                 <Style Selector="^ TextBlock">
                     <Setter Property="TextWrapping" Value="Wrap" />
@@ -78,6 +71,9 @@
                     <!-- Get the current theme and update when theme changes. -->
                     <Binding Source="{x:Static Application.Current}"
                              Path="ActualThemeVariant" />
+                    <Binding Path="((vm:FileTabViewModel)DataContext).UseThresholdGradient"
+                             RelativeSource="{RelativeSource AncestorType=views:FileTabView}"
+                             FallbackValue="false" />
                 </MultiBinding>
             </Setter>
             <Setter Property="Foreground" Value="{DynamicResource DataGridCellForegroundBrush}" />
@@ -130,10 +126,17 @@
 
         </ui:CommandBar>
 
-        <utils:AdaptiveGrid x:Name="Sidebar"
-                            VerticalAlignment="Top"
-                            MinWidth="200"
-                            ShowGridLines="True">
+        <!-- ReSharper disable Xaml.MissingGridIndex -->
+        <utils:AdaptiveGrid VerticalAlignment="Top"
+                            MinWidth="200">
+
+            <Interaction.Behaviors>
+                <BehaviorCollection>
+                    <AdaptiveBehavior SourceControl="{Binding #View}">
+                        <AdaptiveClassSetter MinWidth="0" MaxWidth="500" ClassName="narrow" />
+                    </AdaptiveBehavior>
+                </BehaviorCollection>
+            </Interaction.Behaviors>
 
             <StackPanel>
                 <Label Content="Total average:"
@@ -181,7 +184,15 @@
                               Minimum="{Binding ThresholdMinimum} " />
             </StackPanel>
 
+            <utils:AdaptiveGrid ColumnDefinitions="* Auto">
+                <CheckBox x:Name="UseGradientCheckBox"
+                          IsChecked="{Binding UseThresholdGradient}">
+                    <TextBlock Text="Show gradient threshold" />
+                </CheckBox>
+            </utils:AdaptiveGrid>
+
         </utils:AdaptiveGrid>
+        <!-- ReSharper restore Xaml.MissingGridIndex -->
 
         <Border CornerRadius="8"
                 VerticalAlignment="Stretch"

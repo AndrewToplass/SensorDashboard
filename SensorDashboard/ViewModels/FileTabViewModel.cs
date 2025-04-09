@@ -1,12 +1,12 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using SensorDashboard.Models;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Selection;
 using Avalonia.Platform.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
+using SensorDashboard.Models;
 
 namespace SensorDashboard.ViewModels;
 
@@ -25,6 +25,8 @@ public partial class FileTabViewModel : ViewModelBase
     [ObservableProperty] private double _thresholdMinimum = 5;
 
     [ObservableProperty] private double _thresholdMaximum = 15;
+
+    [ObservableProperty] private bool _useThresholdGradient = false;
 
     [ObservableProperty] private FlatTreeDataGridSource<double[]> _dataGridSource = new([]);
 
