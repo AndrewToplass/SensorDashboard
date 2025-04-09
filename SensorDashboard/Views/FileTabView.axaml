@@ -17,8 +17,8 @@
 
     <UserControl.Styles>
 
-        <Style Selector="UniformGrid">
-            <Setter Property="Columns" Value="1" />
+        <Style Selector="utils|AdaptiveGrid">
+            <Setter Property="ColumnDefinitions" Value="*" />
             <Setter Property="DockPanel.Dock" Value="Left" />
             <Setter Property="Margin" Value="0 0 4 0" />
             <Setter Property="Interaction.Behaviors">
@@ -30,7 +30,7 @@
             </Setter>
 
             <Style Selector="^.narrow">
-                <Setter Property="Columns" Value="2" />
+                <Setter Property="ColumnDefinitions" Value="*, *" />
                 <Setter Property="DockPanel.Dock" Value="Bottom" />
                 <Setter Property="Margin" Value="0 4 0 0" />
             </Style>
@@ -39,8 +39,15 @@
                 <Setter Property="Margin" Value="8 0 8 8" />
             </Style>
 
+            <Style Selector="^ > StackPanel[Orientation=Horizontal] > :is(Control)">
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+
             <Style Selector="^ Label">
                 <Setter Property="Margin" Value="0 4" />
+                <Style Selector="^ TextBlock">
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                </Style>
             </Style>
         </Style>
 
@@ -123,12 +130,16 @@
 
         </ui:CommandBar>
 
-        <UniformGrid VerticalAlignment="Top"
-                     MinWidth="200">
+        <utils:AdaptiveGrid x:Name="Sidebar"
+                            VerticalAlignment="Top"
+                            MinWidth="200"
+                            ShowGridLines="True">
 
             <StackPanel>
-                <Label Content="Total average:" />
-                <NumericUpDown IsReadOnly="True"
+                <Label Content="Total average:"
+                       Target="AverageTotalNumberBox" />
+                <NumericUpDown x:Name="AverageTotalNumberBox"
+                               IsReadOnly="True"
                                FormatString="0.00"
                                ShowButtonSpinner="False"
                                Focusable="False"
@@ -136,8 +147,10 @@
             </StackPanel>
 
             <StackPanel>
-                <Label Content="Row average:" />
-                <NumericUpDown IsReadOnly="True"
+                <Label Content="Row average:"
+                       Target="AverageRowNumberBox" />
+                <NumericUpDown x:Name="AverageRowNumberBox"
+                               IsReadOnly="True"
                                FormatString="0.00"
                                ShowButtonSpinner="False"
                                Focusable="False"
@@ -145,8 +158,10 @@
             </StackPanel>
 
             <StackPanel>
-                <Label Content="Threshold min:" />
-                <ui:NumberBox AcceptsExpression="True"
+                <Label Content="Threshold min:"
+                       Target="MinNumberBox" />
+                <ui:NumberBox x:Name="MinNumberBox"
+                              AcceptsExpression="True"
                               HorizontalAlignment="Stretch"
                               SpinButtonPlacementMode="Inline"
                               SimpleNumberFormat="0.00"
@@ -155,8 +170,10 @@
             </StackPanel>
 
             <StackPanel>
-                <Label Content="Threshold max:" />
-                <ui:NumberBox AcceptsExpression="True"
+                <Label Content="Threshold max:"
+                       Target="MaxNumberBox" />
+                <ui:NumberBox x:Name="MaxNumberBox"
+                              AcceptsExpression="True"
                               HorizontalAlignment="Stretch"
                               SpinButtonPlacementMode="Inline"
                               SimpleNumberFormat="0.00"
@@ -164,7 +181,7 @@
                               Minimum="{Binding ThresholdMinimum} " />
             </StackPanel>
 
-        </UniformGrid>
+        </utils:AdaptiveGrid>
 
         <Border CornerRadius="8"
                 VerticalAlignment="Stretch"
