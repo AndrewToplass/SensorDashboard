@@ -10,9 +10,9 @@
             <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
                              Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
 
-            <Color x:Key="DataGridCellHighBackground">#50ff4040</Color>
-            <Color x:Key="DataGridCellLowBackground">#502080ff</Color>
-            <Color x:Key="DataGridCellGoodBackground">#5010e040</Color>
+            <Color x:Key="DataGridCellHighBackground">#60ff4040</Color>
+            <Color x:Key="DataGridCellLowBackground">#602080ff</Color>
+            <Color x:Key="DataGridCellGoodBackground">#6060e040</Color>
 
             <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush"
                              Color="{StaticResource DataGridCellHighBackground}" />
@@ -38,9 +38,9 @@
             <SolidColorBrush x:Key="TabViewItemHeaderBackgroundSelected"
                              Color="{DynamicResource LayerOnMicaBaseAltFillColorDefault}" />
 
-            <Color x:Key="DataGridCellHighBackground">#30ff4040</Color>
-            <Color x:Key="DataGridCellLowBackground">#302080ff</Color>
-            <Color x:Key="DataGridCellGoodBackground">#3010e040</Color>
+            <Color x:Key="DataGridCellHighBackground">#40ff4040</Color>
+            <Color x:Key="DataGridCellLowBackground">#402080ff</Color>
+            <Color x:Key="DataGridCellGoodBackground">#4060e040</Color>
 
             <SolidColorBrush x:Key="DataGridCellHighBackgroundBrush"
                              Color="{StaticResource DataGridCellHighBackground}" />

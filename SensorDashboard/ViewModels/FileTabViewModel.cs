@@ -22,13 +22,15 @@ public partial class FileTabViewModel : ViewModelBase
         selection.PropertyChanged += TreeDataGridRowSelectionModel_PropertyChanged;
     }
 
-    [ObservableProperty] private double _thresholdMinimum = 5;
+    [ObservableProperty] private double _thresholdMinimum = 15;
 
-    [ObservableProperty] private double _thresholdMaximum = 15;
+    [ObservableProperty] private double _thresholdMaximum = 35;
 
     [ObservableProperty] private bool _useThresholdGradient = false;
 
     [ObservableProperty] private FlatTreeDataGridSource<double[]> _dataGridSource = new([]);
+    
+    [ObservableProperty] private double _dataGridFontSize = 14;
 
     [ObservableProperty] private double _averageTotal;
 
@@ -49,8 +51,12 @@ public partial class FileTabViewModel : ViewModelBase
             SensorData.PropertyChanged += SensorData_PropertyChanged;
             ApplyDataGridColumns();
 
-            DataGridSource.Items = Enumerable.Range(0, SensorData.Rows)
-                .Select(i => SensorData.GetRow(i).ToArray()).ToArray();
+            DataGridSource.Items =
+            [
+                ..Enumerable
+                    .Range(0, SensorData.Rows)
+                    .Select(i => SensorData.GetRow(i).ToArray())
+            ];
             AverageTotal = DataProcessor.Instance.AverageOfDataset(SensorData);
         }
     }
@@ -96,9 +102,9 @@ public partial class FileTabViewModel : ViewModelBase
         DataGridSource.Columns.Clear();
         DataGridSource.Columns.AddRange(
             Enumerable.Range(0, SensorData.Columns)
-                .Select(i => new TextColumn<double[], double>(
+                .Select(i => new TextColumn<double[], string>(
                     header: SensorData.Labels?[i] ?? i.ToString(),
-                    getter: row => row[i],
+                    getter: row => $"{row[i]:0.000}",
                     width: null,
                     options: null
                 )));

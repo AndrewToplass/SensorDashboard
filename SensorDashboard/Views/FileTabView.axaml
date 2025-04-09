@@ -13,6 +13,7 @@
 
     <UserControl.Resources>
         <utils:DataGridCellColorMultiConverter x:Key="DataGridCellColorMultiConverter" />
+        <utils:DataGridCellPaddingConverter x:Key="DataGridCellPaddingConverter" />
     </UserControl.Resources>
 
     <UserControl.Styles>
@@ -168,6 +169,8 @@
                               HorizontalAlignment="Stretch"
                               SpinButtonPlacementMode="Inline"
                               SimpleNumberFormat="0.00"
+                              SmallChange="0.5"
+                              LargeChange="10"
                               Value="{Binding ThresholdMinimum}"
                               Maximum="{Binding ThresholdMaximum}" />
             </StackPanel>
@@ -180,6 +183,8 @@
                               HorizontalAlignment="Stretch"
                               SpinButtonPlacementMode="Inline"
                               SimpleNumberFormat="0.00"
+                              SmallChange="0.5"
+                              LargeChange="10"
                               Value="{Binding ThresholdMaximum}"
                               Minimum="{Binding ThresholdMinimum} " />
             </StackPanel>
@@ -190,6 +195,18 @@
                     <TextBlock Text="Show gradient threshold" />
                 </CheckBox>
             </utils:AdaptiveGrid>
+
+            <StackPanel>
+                <Label Content="Grid font size:"
+                       Target="FontSizeNumberBox" />
+                <ui:NumberBox x:Name="FontSizeNumberBox"
+                              AcceptsExpression="True"
+                              HorizontalAlignment="Stretch"
+                              SpinButtonPlacementMode="Inline"
+                              SimpleNumberFormat="0.0"
+                              Value="{Binding DataGridFontSize}"
+                              Minimum="10" />
+            </StackPanel>
 
         </utils:AdaptiveGrid>
         <!-- ReSharper restore Xaml.MissingGridIndex -->
@@ -210,7 +227,17 @@
                               CanUserResizeColumns="False"
                               CanUserSortColumns="False"
                               VerticalAlignment="Top"
-                              IsVisible="{Binding DataGridSource.Columns.Count}" />
+                              IsVisible="{Binding DataGridSource.Columns.Count}"
+                              FontSize="{Binding DataGridFontSize}">
+
+                    <TreeDataGrid.Styles>
+                        <Style Selector=":is(TreeDataGridCell)">
+                            <Setter Property="MinHeight" Value="16" />
+                            <Setter Property="Padding"
+                                    Value="{Binding #DataGridDisplay.FontSize, Converter={StaticResource DataGridCellPaddingConverter}}" />
+                        </Style>
+                    </TreeDataGrid.Styles>
+                </TreeDataGrid>
             </Border>
         </Border>
 
