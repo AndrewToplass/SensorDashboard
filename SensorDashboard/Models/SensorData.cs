@@ -103,12 +103,12 @@ public partial class SensorData : ObservableObject
     }
 
     /// <summary>
-    /// Read sensor dataset from a file path.
+    /// Read sensor dataset from a stream.
     /// </summary>
-    /// <param name="stream">The file path to open and read data from.</param>
+    /// <param name="stream">The stream to read data from.</param>
     /// <param name="fileName">The name of the file, only used for CSV.</param>
     /// <returns>A new instance containing the parsed data.</returns>
-    public static async Task<SensorData> FromFileAsync(Stream stream, string? fileName = null)
+    public static async Task<SensorData> FromStreamAsync(Stream stream, string? fileName = null)
     {
         var sensorData = fileName?.EndsWith(".csv") ?? false
             ? await ReadCsvDataAsync(stream, Path.GetFileNameWithoutExtension(fileName))
@@ -252,7 +252,7 @@ public partial class SensorData : ObservableObject
     /// </summary>
     /// <param name="stream">The stream to write data to.</param>
     /// <param name="fileName">The name of the file, only used for CSV.</param>
-    public async Task SaveToFileAsync(Stream stream, string? fileName = null)
+    public async Task SaveToStreamAsync(Stream stream, string? fileName = null)
     {
         if (fileName?.EndsWith(".csv") ?? false)
         {

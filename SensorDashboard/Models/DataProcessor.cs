@@ -1,7 +1,7 @@
 using System.IO;
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using SensorDashboard.Utils;
 
 namespace SensorDashboard.Models;
@@ -32,13 +32,13 @@ public partial class DataProcessor : ObservableObject
 
     public async Task<SensorData> OpenDatasetAsync(Stream stream, string? fileName = null)
     {
-        var dataset = await SensorData.FromFileAsync(stream, fileName);
+        var dataset = await SensorData.FromStreamAsync(stream, fileName);
         Datasets.Add(dataset);
         return dataset;
     }
 
     public async Task SaveDatasetAsync(SensorData dataset, Stream stream, string? fileName = null) =>
-        await dataset.SaveToFileAsync(stream, fileName);
+        await dataset.SaveToStreamAsync(stream, fileName);
 
     public void CloseDataset(SensorData dataset) => Datasets.Remove(dataset);
 
