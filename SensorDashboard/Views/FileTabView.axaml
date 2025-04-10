@@ -18,6 +18,14 @@
 
     <UserControl.Styles>
 
+        <!-- Fixes missing scrollbar in data grid. -->
+        <Style Selector="ScrollBar:vertical">
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Style Selector="^ Grid, ^ Border, ^ Track">
+                <Setter Property="VerticalAlignment" Value="Stretch" />
+            </Style>
+        </Style>
+
         <Style Selector="DockPanel > utils|AdaptiveGrid">
             <Setter Property="ColumnDefinitions" Value="*" />
             <Setter Property="DockPanel.Dock" Value="Left" />
@@ -189,13 +197,6 @@
                               Minimum="{Binding ThresholdMinimum} " />
             </StackPanel>
 
-            <utils:AdaptiveGrid ColumnDefinitions="* Auto">
-                <CheckBox x:Name="UseGradientCheckBox"
-                          IsChecked="{Binding UseThresholdGradient}">
-                    <TextBlock Text="Show gradient threshold" />
-                </CheckBox>
-            </utils:AdaptiveGrid>
-
             <StackPanel>
                 <Label Content="Grid font size:"
                        Target="FontSizeNumberBox" />
@@ -207,6 +208,13 @@
                               Value="{Binding DataGridFontSize}"
                               Minimum="10" />
             </StackPanel>
+
+            <utils:AdaptiveGrid RowHeight="*">
+                <CheckBox x:Name="UseGradientCheckBox"
+                          IsChecked="{Binding UseThresholdGradient}">
+                    <TextBlock Text="Show gradient threshold" />
+                </CheckBox>
+            </utils:AdaptiveGrid>
 
         </utils:AdaptiveGrid>
         <!-- ReSharper restore Xaml.MissingGridIndex -->
