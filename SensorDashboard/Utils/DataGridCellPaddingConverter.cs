@@ -7,7 +7,9 @@ namespace SensorDashboard.Utils;
 
 public class DataGridCellPaddingConverter : IValueConverter
 {
-    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+    public static readonly DataGridCellPaddingConverter Instance = new();
+
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not double fontSize) return AvaloniaProperty.UnsetValue;
         if (targetType != typeof(Thickness)) return AvaloniaProperty.UnsetValue;

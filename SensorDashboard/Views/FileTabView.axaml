@@ -11,20 +11,7 @@
              x:DataType="vm:FileTabViewModel"
              x:Name="View">
 
-    <UserControl.Resources>
-        <utils:DataGridCellColorMultiConverter x:Key="DataGridCellColorMultiConverter" />
-        <utils:DataGridCellPaddingConverter x:Key="DataGridCellPaddingConverter" />
-    </UserControl.Resources>
-
     <UserControl.Styles>
-
-        <!-- Fixes missing scrollbar in data grid. -->
-        <Style Selector="ScrollBar:vertical">
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Style Selector="^ Grid, ^ Border, ^ Track">
-                <Setter Property="VerticalAlignment" Value="Stretch" />
-            </Style>
-        </Style>
 
         <Style Selector="DockPanel > utils|AdaptiveGrid">
             <Setter Property="ColumnDefinitions" Value="*" />
@@ -53,23 +40,12 @@
             </Style>
         </Style>
 
-        <Style Selector="Grid > NumericUpDown, Grid > ui|NumberBox, DataGridCell">
-            <!-- Use tabular figures for numerical inputs so text width
-                 doesn't change as value changes. -->
-            <Setter Property="FontFeatures" Value="tnum" />
-        </Style>
-
-        <Style Selector="Grid > :is(Control)">
-            <!-- Vertically centre all Grid child controls. -->
-            <Setter Property="VerticalAlignment" Value="Center" />
-        </Style>
-
         <!-- Colour DataGridCells based on their numerical value. -->
         <Style Selector="TreeDataGridTextCell">
             <Setter Property="Background">
                 <!-- Use a multi-binding so changes to either the grid cell
                      content, min or max values will trigger style update. -->
-                <MultiBinding Converter="{StaticResource DataGridCellColorMultiConverter}">
+                <MultiBinding Converter="{x:Static utils:DataGridCellColorMultiConverter.Instance}">
                     <Binding Path="((vm:FileTabViewModel)DataContext).ThresholdMinimum"
                              RelativeSource="{RelativeSource AncestorType=views:FileTabView}"
                              FallbackValue="0" />
@@ -86,6 +62,13 @@
                 </MultiBinding>
             </Setter>
             <Setter Property="Foreground" Value="{DynamicResource DataGridCellForegroundBrush}" />
+        </Style>
+
+        <!-- Adjust data grid cell padding when font size changes. -->
+        <Style Selector=":is(TreeDataGridCell)">
+            <Setter Property="MinHeight" Value="16" />
+            <Setter Property="Padding"
+                    Value="{Binding #DataGridDisplay.FontSize, Converter={x:Static utils:DataGridCellPaddingConverter.Instance}}" />
         </Style>
 
     </UserControl.Styles>
@@ -141,6 +124,8 @@
 
             <Interaction.Behaviors>
                 <BehaviorCollection>
+                    <!-- Add style class when less than 500px width to split to
+                         reposition content to fit better. -->
                     <AdaptiveBehavior SourceControl="{Binding #View}">
                         <AdaptiveClassSetter MinWidth="0" MaxWidth="500" ClassName="narrow" />
                     </AdaptiveBehavior>
@@ -236,16 +221,7 @@
                               CanUserSortColumns="False"
                               VerticalAlignment="Top"
                               IsVisible="{Binding DataGridSource.Columns.Count}"
-                              FontSize="{Binding DataGridFontSize}">
-
-                    <TreeDataGrid.Styles>
-                        <Style Selector=":is(TreeDataGridCell)">
-                            <Setter Property="MinHeight" Value="16" />
-                            <Setter Property="Padding"
-                                    Value="{Binding #DataGridDisplay.FontSize, Converter={StaticResource DataGridCellPaddingConverter}}" />
-                        </Style>
-                    </TreeDataGrid.Styles>
-                </TreeDataGrid>
+                              FontSize="{Binding DataGridFontSize}" />
             </Border>
         </Border>
 

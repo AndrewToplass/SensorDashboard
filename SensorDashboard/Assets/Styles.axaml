@@ -18,6 +18,7 @@
         <Setter Property="FontFamily" Value="{StaticResource ContentControlThemeFontFamily}" />
     </Style>
 
+    <!-- Window control colours. -->
     <Style Selector="windowing|MinMaxCloseControl /template/ Button">
         <Style Selector="^ /template/ ui|FontIcon">
             <Setter Property="Foreground" Value="{DynamicResource WindowControlsForegroundBrush}" />
@@ -52,6 +53,22 @@
                 <Setter Property="Background" Value="{DynamicResource WindowControlsClosePressedBackgroundBrush}" />
             </Style>
         </Style>
-
     </Style>
+
+
+    <!-- Fix missing vertical scrollbar in data grid. -->
+    <Style Selector="ScrollBar:vertical">
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Style Selector="^ Grid, ^ Border, ^ Track">
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+    </Style>
+
+    <!-- Use tabular figures for numerical inputs so text width
+         doesn't change as value changes. -->
+    <Style Selector="NumericUpDown, ui|NumberBox, DataGridCell">
+        <Setter Property="FontFeatures" Value="tnum" />
+    </Style>
+
+
 </Styles>

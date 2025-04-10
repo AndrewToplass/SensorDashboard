@@ -10,6 +10,8 @@ namespace SensorDashboard.Utils;
 
 public class DataGridCellColorMultiConverter : AvaloniaObject, IMultiValueConverter
 {
+    public static readonly DataGridCellColorMultiConverter Instance = new();
+
     public object Convert(IList<object?> values, Type targetType, object? parameter, CultureInfo culture)
     {
         if (values.Count < 5 ||
