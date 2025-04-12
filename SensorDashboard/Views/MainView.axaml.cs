@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Specialized;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -29,7 +28,6 @@ public partial class MainView : UserControl
         }
 
         ViewModel.CreateNewTab();
-        ViewModel.OpenTabs.CollectionChanged += OpenTabs_CollectionChanged;
 
         base.OnDataContextChanged(e);
     }
@@ -48,35 +46,33 @@ public partial class MainView : UserControl
 
         var index = ViewModel.OpenTabs.IndexOf(tab);
         DataProcessor.Instance.CloseDataset(tab.SensorData);
-        ViewModel.OpenTabs.Remove(tab);
 
-        if (oldTab != tab)
-        {
-            ViewModel.SelectedTab = oldTab;
-        }
-        else
-        {
-            var newTab = index < ViewModel.OpenTabs.Count
-                ? ViewModel.OpenTabs[index]
+        var newIndex = index + 1 < ViewModel.OpenTabs.Count
+            ? index + 1
+            : index - 1;
+
+        ViewModel.SelectedTab = oldTab != tab
+            ? oldTab
+            : newIndex >= 0
+                ? ViewModel.OpenTabs[newIndex]
                 : null;
-            ViewModel.SelectedTab = null;
-            ViewModel.SelectedTab = newTab;
-        }
 
-        return true;
-    }
-
-    private void OpenTabs_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs args)
-    {
+        ViewModel.OpenTabs.Remove(tab);
         if (ViewModel.OpenTabs.Count > 0)
         {
-            return;
+            return true;
         }
 
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.Shutdown();
         }
+        else
+        {
+            ViewModel.CreateNewTab();
+        }
+
+        return true;
     }
 
     private async void Tabs_OnTabCloseRequested(TabView sender, TabViewTabCloseRequestedEventArgs args)
