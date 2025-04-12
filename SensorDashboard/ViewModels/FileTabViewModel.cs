@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -29,7 +30,7 @@ public partial class FileTabViewModel : ViewModelBase
     [ObservableProperty] private bool _useThresholdGradient = false;
 
     [ObservableProperty] private FlatTreeDataGridSource<double[]> _dataGridSource = new([]);
-    
+
     [ObservableProperty] private double _dataGridFontSize = 14;
 
     [ObservableProperty] private double _averageTotal;
@@ -75,7 +76,15 @@ public partial class FileTabViewModel : ViewModelBase
     {
         File = file;
         await using var stream = await file.OpenReadAsync();
-        SensorData = await DataProcessor.Instance.OpenDatasetAsync(stream, file.Name);
+
+        var bytes = new byte[stream.Length];
+        if (await stream.ReadAsync(bytes) != bytes.Length)
+        {
+            throw new IOException("Unable to read file.");
+        }
+
+        var memoryStream = new MemoryStream(bytes);
+        SensorData = await DataProcessor.Instance.OpenDatasetAsync(memoryStream, file.Name);
     }
 
     public async Task<bool> SaveFile()
@@ -85,8 +94,11 @@ public partial class FileTabViewModel : ViewModelBase
             return false;
         }
 
+        await using var buffer = new MemoryStream();
+        await DataProcessor.Instance.SaveDatasetAsync(SensorData, buffer, File.Name);
+
         await using var stream = await File.OpenWriteAsync();
-        await DataProcessor.Instance.SaveDatasetAsync(SensorData, stream, File.Name);
+        await stream.WriteAsync(buffer.ToArray());
 
         return true;
     }

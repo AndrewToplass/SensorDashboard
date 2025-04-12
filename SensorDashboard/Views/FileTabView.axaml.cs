@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.JavaScript;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -126,6 +127,11 @@ public partial class FileTabView : UserControl
             {
                 await _viewModel.SaveFile(file);
             }
+        }
+        catch (JSException)
+        {
+            // Browser platform cannot save to existing files.
+            SaveFileAsButton_OnClick(sender, e);
         }
         catch (Exception ex)
         {
